@@ -1,15 +1,15 @@
 # See https://help.github.com/articles/ignoring-files/ for more about ignoring files.
 
 #virtual env
-/venv
+venv
 
 #in progress
-/node-service
-/sentiment-microservice
+node-service
+sentiment-microservice
 
 
 #Reference
-/frontend-old
-/Backend-Copy
-/ecommerce-nextjs-fullstack-app
-/slices
+frontend-old
+Backend-Copy
+ecommerce-nextjs-fullstack-app
+slices
