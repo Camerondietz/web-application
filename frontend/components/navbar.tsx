@@ -1,5 +1,4 @@
-"use client";
-
+"use client"
 import Link from "next/link";
 import { useEffect, useState } from "react";
 import { useSelector, useDispatch } from "react-redux";
@@ -11,6 +10,7 @@ import {
   Bars3Icon,
   XMarkIcon,
 } from "@heroicons/react/24/outline";
+import { toggleMenu } from "@/store/features/menu/menuSlice";
 
 const Navbar = () => {
   const loggedIn = useSelector((state: RootState) => state.auth.isAuthenticated);
@@ -43,9 +43,9 @@ const Navbar = () => {
     <header className="p-4 bg-white text-gray-800 flex justify-between">
       <div>
       {mobileOpen ? (
-              <XMarkIcon className="h-6 w-6" />
+              <XMarkIcon onClick={() => dispatch(toggleMenu())} className="h-6 w-6" />
             ) : (
-              <Bars3Icon className="h-6 w-6" />
+              <Bars3Icon onClick={() => dispatch(toggleMenu())} className="h-6 w-6" />
             )}
       </div>
       
@@ -57,14 +57,14 @@ const Navbar = () => {
             {loggedIn ? (
               //<AdminPanel />
               <div>
-              username
-              <button onClick={handleLogout}>Logout</button>;
+              <a className="px-2">{username}</a>
+              <button className="px-2" onClick={handleLogout}>Logout</button>
               </div>
             ) : (
               //<LoginForm />
               <div>
-                <Link href="/login">Login</Link>
-                <Link href="/register">register</Link>
+                <Link className="px-2" href="/login">Login</Link>
+                <Link className="px-2" href="/register">register</Link>
               </div>
             )}
       </div>

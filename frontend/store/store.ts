@@ -2,6 +2,7 @@ import { configureStore } from '@reduxjs/toolkit'
 //import cartReducer from "./slices/cartSlice";
 import authReducer from "./features/auth/authSlice";
 import counterReducer from "./features/counter/counterSlice";
+import menuReducer from "./features/menu/menuSlice";
 
 export const makeStore = () => {
   return configureStore({
@@ -9,6 +10,7 @@ export const makeStore = () => {
       //cart: cartReducer,
       auth: authReducer,
       counter: counterReducer,
+      menu: menuReducer,
     }
   })
 }

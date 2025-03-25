@@ -8,6 +8,7 @@ from rest_framework import status
 from rest_framework_simplejwt.tokens import RefreshToken
 from django.contrib.auth.models import User
 from django.contrib.auth import authenticate
+#from django.views.decorators.csrf import csrf_protect
 
 def home(request):
      return HttpResponse("Hello")
@@ -34,7 +35,11 @@ def login_user(request):
     """User Login API"""
     username = request.data.get('username')
     password = request.data.get('password')
-
+    print("Login attempt",username,password)
+    
+    if username is None or password is None:
+        return Response({"error": "Missing credentials"}, status=status.HTTP_400_BAD_REQUEST)
+    
     user = authenticate(username=username, password=password)
 
     if user is not None:
@@ -49,16 +54,34 @@ def login_user(request):
 
 
 #`logout_request` view to handle sign-out requests
+#@csrf_protect
 @api_view(['POST'])
 def logout_user(request):
     """User Logout API - Blacklists the refresh token"""
     try:
         refresh_token = request.data.get("refresh")
-        token = RefreshToken(refresh_token)
-        token.blacklist()
+        print(refresh_token)
+        if not refresh_token:
+            return Response({"error": "Refresh token required"}, status=status.HTTP_400_BAD_REQUEST)
+        print("Token mpresent")
+        # Attempt to parse and validate the refresh token
+        try:
+            token = RefreshToken(refresh_token)
+        except Exception as e:
+            print(f"Error occurred: {str(e)}")
+            return Response({"error": "Invalid or expired token"}, status=status.HTTP_400_BAD_REQUEST)
+        print("token created")
 
-        return Response({"message": "Logout successful"}, status=status.HTTP_205_RESET_CONTENT)
+        # Blacklist the token if valid
+        try:
+            token.blacklist()
+            return Response({"message": "Logout successful"}, status=status.HTTP_205_RESET_CONTENT)
+        except Exception as e:
+            print(f"Error occurred: {str(e)}")
+            return Response({"error": "Logout unsuccessful"}, status=status.HTTP_400_BAD_REQUEST)
+        
     except Exception as e:
+        print(f"Error occurred: {str(e)}")
         return Response({"error": "Invalid token"}, status=status.HTTP_400_BAD_REQUEST)
 
 

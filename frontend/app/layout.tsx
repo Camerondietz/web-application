@@ -2,6 +2,8 @@ import type { Metadata } from "next";
 import "./globals.css";
 import StoreProvider from "./StoreProvider";
 import Navbar from "../components/navbar";
+import Sidebar from "@/components/sidebar";
+//import { ErrorWrapper } from "./error-wrapper";
 
 export const metadata: Metadata = {
   title: {
@@ -21,6 +23,7 @@ export default function RootLayout({
       <body className="h-full">
           <StoreProvider>
             <Navbar />
+            <Sidebar />
             {children}
           </StoreProvider>
       </body>

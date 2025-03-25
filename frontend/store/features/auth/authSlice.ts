@@ -47,7 +47,8 @@ export const loginUser = createAsyncThunk(
 
       return { user: username };
     } catch (error: any) {
-      return rejectWithValue(error.response?.data || "Login failed");
+      const errorMessage = error.response?.data?.error || "Login failed"; // Extract message
+      return rejectWithValue(errorMessage); // Ensure only string is returned
     }
   }
 );
@@ -56,18 +57,45 @@ export const loginUser = createAsyncThunk(
 export const logoutUser = createAsyncThunk("auth/logoutUser", async () => {
   try {
     const refreshToken = Cookies.get("refreshToken");
+    //const csrfToken = Cookies.get("csrftoken");
 
-    if (refreshToken) {
-      await axios.post(`${API_URL}/logout/`, { refresh: refreshToken });
-
-      // Remove tokens from cookies
-      Cookies.remove("accessToken");
-      Cookies.remove("refreshToken");
+    if (!refreshToken) {
+      throw new Error("No refresh token found.");
     }
+    //Ensure the request format matches Django's API
+    await axios.post(
+      `${API_URL}/logout/`,
+      { refresh: refreshToken },
+      { headers: {"Content-Type": "application/json" } }
+    );
+
+    //Remove tokens from cookies
+    Cookies.remove("accessToken");
+    Cookies.remove("refreshToken");
+
+    console.log("Logged out successfully");
+    return true; // Success response
   } catch (error) {
     console.error("Logout failed", error);
   }
 });
+
+export const registerUser = createAsyncThunk(
+  "auth/registerUser",
+  async ({ username, email, password }: { username: string; email: string; password: string }, { rejectWithValue }) => {
+    try {
+      const response = await axios.post(`${API_URL}/register/`, { username, email, password });
+
+      // Store tokens in cookies
+      Cookies.set("accessToken", response.data.access, { secure: true });
+      Cookies.set("refreshToken", response.data.refresh, { secure: true });
+
+      return { user: username };
+    } catch (error: any) {
+      return rejectWithValue(error.response?.data?.error || "Registration failed");
+    }
+  }
+);
 
 export const authSlice = createSlice({
   name: 'auth',
