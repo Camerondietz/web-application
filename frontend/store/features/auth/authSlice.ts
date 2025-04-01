@@ -4,7 +4,7 @@ import axios from "axios";
 import Cookies from "js-cookie";
 
 // Base URL for Django API
-const API_URL = "http://localhost:8000/api";
+const API_URL = process.env.NEXT_PUBLIC_API_URL;
 
 // Define a type for the slice state
 /*
@@ -39,7 +39,7 @@ export const loginUser = createAsyncThunk(
   "auth/loginUser",
   async ({ username, password }: { username: string; password: string }, { rejectWithValue }) => {
     try {
-      const response = await axios.post(`${API_URL}/login/`, { username, password });
+      const response = await axios.post(`${API_URL}/api/login/`, { username, password });
 
       // Store tokens in cookies
       Cookies.set("accessToken", response.data.access, { secure: true });
