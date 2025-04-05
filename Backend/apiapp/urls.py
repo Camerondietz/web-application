@@ -35,4 +35,7 @@ urlpatterns = [
     # Path for logout
     path('logout/', views.logout_user, name='logout'),
     #path('list/',views.categories)
+    path("account/", views.get_account_details, name="account-details"),
+    path("account/update/", views.update_account_details, name="account-update"),
+    path("account/change-password/", views.change_password, name="account-change-password"),
 ]

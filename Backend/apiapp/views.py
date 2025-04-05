@@ -3,11 +3,13 @@ from django.shortcuts import render, get_object_or_404
 from django.core.paginator import Paginator
 from .models import Category, Product
 from .serializers import CategorySerializer, ProductSerializer
-from rest_framework.decorators import api_view
+from rest_framework.decorators import api_view, permission_classes
+from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
 from rest_framework import status
 from rest_framework_simplejwt.tokens import RefreshToken
 from django.contrib.auth.models import User
+from django.contrib.auth.hashers import check_password, make_password
 from django.contrib.auth import authenticate
 from django.db.models import Q
 
@@ -178,3 +180,59 @@ def register_user(request):
         "refresh": str(refresh),
         "access": str(refresh.access_token),
     }, status=status.HTTP_201_CREATED)
+
+# GET Account Details
+@api_view(['GET'])
+@permission_classes([IsAuthenticated])
+def get_account_details(request):
+    """Retrieve user account details."""
+    user = request.user  # Authenticated user
+    return Response({
+        "first_name": user.first_name,
+        "last_name": user.last_name,
+        "email": user.email,
+        "phone": user.profile.phone if hasattr(user, "profile") else "",
+    }, status=status.HTTP_200_OK)
+
+
+# UPDATE Account Details
+@api_view(['PUT'])
+@permission_classes([IsAuthenticated])
+def update_account_details(request):
+    """Update user account details."""
+    user = request.user  # Authenticated user
+    data = request.data
+
+    user.first_name = data.get("first_name", user.first_name)
+    user.last_name = data.get("last_name", user.last_name)
+    user.email = data.get("email", user.email)
+    
+    # Optional: Update phone if using a custom user profile model
+    if hasattr(user, "profile"):
+        user.profile.phone = data.get("phone", user.profile.phone)
+        user.profile.save()
+
+    user.save()
+    return Response({"message": "Account updated successfully"}, status=status.HTTP_200_OK)
+
+
+# CHANGE PASSWORD
+@api_view(['PUT'])
+@permission_classes([IsAuthenticated])
+def change_password(request):
+    """Allow users to change their password after verifying their current password."""
+    user = request.user
+    current_password = request.data.get("current_password")
+    new_password = request.data.get("new_password")
+    confirm_password = request.data.get("confirm_password")
+
+    if not user.check_password(current_password):
+        return Response({"error": "Current password is incorrect"}, status=status.HTTP_400_BAD_REQUEST)
+
+    if new_password != confirm_password:
+        return Response({"error": "New passwords do not match"}, status=status.HTTP_400_BAD_REQUEST)
+
+    user.password = make_password(new_password)
+    user.save()
+    
+    return Response({"message": "Password updated successfully"}, status=status.HTTP_200_OK)
