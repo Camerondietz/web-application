@@ -4,6 +4,7 @@ import { useEffect, useState } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { RootState } from "../store/store";
 import { logoutUser } from "../store/features/auth/authSlice";
+import { loadUser } from "../store/features/auth/authSlice";
 import type { AppDispatch } from "../store/store";
 import { useRouter } from "next/navigation";
 import { 
@@ -38,6 +39,10 @@ const Navbar = () => {
     return () => window.removeEventListener("resize", handleResize);
   }, []);
 
+  useEffect(() => {
+    dispatch(loadUser());
+  }, [dispatch]);
+
   const handleLogout = () => {
     dispatch(logoutUser());
   };
@@ -48,9 +53,9 @@ const Navbar = () => {
       router.push(`/products?keyword=${encodeURIComponent(searchTerm)}`);
     }
   };
-
+//max-w-screen-md limit stretch
   return (
-    <header className="p-4 bg-white text-gray-800 flex items-center justify-between relative">
+    <header className="p-4 bg-gray-100 dark:bg-gray-800 text-gray-700 dark:text-gray-300 flex items-center justify-between relative">
       {/* Mobile Menu Icon */}
       <div>
         {mobileOpen ? (
@@ -66,18 +71,18 @@ const Navbar = () => {
       </Link>
 
       {/* Desktop Search Bar */}
-      <div className="hidden md:flex items-center w-[50%] border border-gray-300 rounded-lg px-2">
+      <form onSubmit={handleSearch} className="hidden md:flex items-center w-[50%] border border-gray-300 rounded-lg px-2">
         <input
           type="text"
           placeholder="Search products..."
           value={searchTerm}
           onChange={(e) => setSearchTerm(e.target.value)}
           className="p-2 outline-none flex-1" // Takes up remaining space
-        />
+        ></input>
         <button onClick={handleSearch} className="p-2">
           <MagnifyingGlassIcon className="h-5 w-5 text-gray-500" />
         </button>
-      </div>
+      </form>
 
       {/* User Authentication justify-between*/}
       <div>
@@ -104,12 +109,12 @@ const Navbar = () => {
       <div className="relative">
         <Link href="/cart">
           <ShoppingCartIcon className="h-6 w-6" />
-        </Link>
         {totalItems > 0 && (
           <span className="absolute -top-2 -right-2 bg-red-500 text-white text-xs font-bold w-5 h-5 flex items-center justify-center rounded-full">
             {totalItems}
           </span>
         )}
+        </Link>
       </div>
 
       {/* Mobile Search Icon */}
@@ -122,7 +127,7 @@ const Navbar = () => {
 
       {/* Mobile Search Bar (Appears Below Navbar) */}
       {searchOpen && (
-        <div className="absolute top-full left-0 w-full bg-white p-2 border-t shadow-md md:hidden">
+        <div className="absolute top-full left-0 w-full bg-gray-100 dark:bg-gray-800 p-2 border-t shadow-md md:hidden">
           <form onSubmit={handleSearch} className="flex items-center border border-gray-300 rounded-lg px-2">
             <input
               type="text"

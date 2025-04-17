@@ -8,13 +8,13 @@ import { useRouter } from "next/navigation"
 export default function checkout() {
     const router = useRouter();
     const handleClick = () => {
-        console.log("placing order");
+        console.log("Learning is taking place");
         router.push("/");
     };
     return (
         <>
             <h2>
-            solutions page
+            learn page
             </h2>
             <button onClick={handleClick}>Return home</button>
         </>

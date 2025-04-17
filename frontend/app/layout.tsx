@@ -2,7 +2,9 @@ import type { Metadata } from "next";
 import "./globals.css";
 import StoreProvider from "./StoreProvider";
 import Navbar from "../components/navbar";
+import Footer from "@/components/footer";
 import Sidebar from "@/components/sidebar";
+//import ThemeProvider from "@/components/ThemeProvider"; <ThemeProvider>
 //import { ErrorWrapper } from "./error-wrapper";
 
 export const metadata: Metadata = {
@@ -19,15 +21,15 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en" className="h-full bg-gray-100">
-      <body className="h-full">
-          <StoreProvider>
+    <html lang="en" className="h-full">
+      <body className="min-h-screen flex flex-col h-full bg-white text-black dark:bg-gray-900 dark:text-white transition-colors duration-300">
+        <StoreProvider>
             <Navbar />
             <Sidebar />
-            {children}
-          </StoreProvider>
+            <main className="flex-grow">{children}</main>
+            <Footer />
+        </StoreProvider>
       </body>
     </html>
   );
 }
-// count={0} if i needed to initialize data

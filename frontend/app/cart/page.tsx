@@ -20,11 +20,11 @@ export default function CartPage() {
       {cart.length === 0 ? (
         <p className="text-center text-gray-500">Your cart is empty. <Link href="/products" className="text-blue-600 underline">Shop now</Link>.</p>
       ) : (
-        <div className="bg-white shadow-lg rounded-lg p-6">
+        <div className="shadow-lg bg-gray-100 dark:bg-gray-800 text-gray-700 dark:text-gray-300 rounded-lg p-6">
           <div className="overflow-x-auto">
             <table className="w-full border-collapse">
               <thead>
-                <tr className="bg-gray-100 text-left">
+                <tr className="text-left">
                   <th className="p-3">Product</th>
                   <th className="p-3 text-center">Quantity</th>
                   <th className="p-3 text-right">Price</th>
@@ -36,7 +36,7 @@ export default function CartPage() {
                 {cart.map((item) => (
                   <tr key={item.id} className="border-b">
                     <td className="p-3 flex items-center">
-                      <img src={item.image || "/placeholder.jpg"} alt={item.name} className="w-16 h-16 object-cover rounded mr-4" />
+                      <img src={item.image ? `${process.env.NEXT_PUBLIC_API_URL}${item.image}` : "@/public/placeholder.jpg"} alt={item.name} className="w-16 h-16 object-cover rounded mr-4" />
                       <Link href={`/products/${item.id}`} className="text-blue-600 hover:underline">{item.name}</Link>
                     </td>
                     <td className="p-3 text-center">
@@ -44,16 +44,16 @@ export default function CartPage() {
                         <button
                           onClick={() => dispatch(updateQuantity({ id: item.id, quantity: item.quantity - 1 }))}
                           disabled={item.quantity <= 1}
-                          className="p-2 bg-gray-200 hover:bg-gray-300 rounded-md"
+                          className="p-2 bg-gray-200 hover:bg-gray-300 rounded-md text-gray-700"
                         >
                           <Minus size={16} />
                         </button>
                         <span className="px-4">{item.quantity}</span>
                         <button
                           onClick={() => dispatch(updateQuantity({ id: item.id, quantity: item.quantity + 1 }))}
-                          className="p-2 bg-gray-200 hover:bg-gray-300 rounded-md"
+                          className="p-2 bg-gray-200 hover:bg-gray-300 rounded-md text-gray-700"
                         >
-                          <Plus size={16} />
+                          <Plus size={16}/>
                         </button>
                       </div>
                     </td>
@@ -72,9 +72,9 @@ export default function CartPage() {
 
           <div className="flex justify-between items-center mt-6">
             <p className="text-xl font-bold">Total: ${total.toFixed(2)}</p>
-            <button className="px-6 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700">
+            <Link href={`/checkout`} className="px-6 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700">
               Checkout
-            </button>
+            </Link>
           </div>
         </div>
       )}

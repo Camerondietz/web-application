@@ -6,21 +6,6 @@ import Cookies from "js-cookie";
 // Base URL for Django API
 const API_URL = process.env.NEXT_PUBLIC_API_URL;
 
-// Define a type for the slice state
-/*
-interface AuthState {
-  isLoggedIn: boolean
-  status: 'idle' | 'loading' | 'failed'
-  user: string | null
-}
-
-// Define the initial state using that type
-const initialState: AuthState = {
-  isLoggedIn: false,
-  status: 'idle',
-  user: null
-}*/
-
 interface AuthState {
   user: string | null;
   isAuthenticated: boolean;
@@ -64,7 +49,7 @@ export const logoutUser = createAsyncThunk("auth/logoutUser", async () => {
     }
     //Ensure the request format matches Django's API
     await axios.post(
-      `${API_URL}/logout/`,
+      `${API_URL}/api/logout/`,
       { refresh: refreshToken },
       { headers: {"Content-Type": "application/json" } }
     );
@@ -97,22 +82,34 @@ export const registerUser = createAsyncThunk(
   }
 );
 
-export const authSlice = createSlice({
-  name: 'auth',
-  // `createSlice` will infer the state type from the `initialState` argument
-  initialState,
-  reducers: {
-    /*Logout: state => {
-      state.isLoggedIn = false
-      state.user = null;
-    },
-    // Use the PayloadAction type to declare the contents of `action.payload`
-    LoginSuccess: (state, action: PayloadAction<string>) => {
-      state.user = action.payload
-      state.isLoggedIn = true
-    }*/
-  },
+// Async action: Load user from stored token
+export const loadUser = createAsyncThunk(
+  "auth/loadUser",
+  async (_, { rejectWithValue }) => {
+    try {
+      const accessToken = Cookies.get("accessToken");
 
+      if (!accessToken) {
+        return rejectWithValue("No token found");
+      }
+
+      const response = await axios.get(`${API_URL}/api/auth/`, {
+        headers: {
+          Authorization: `Bearer ${accessToken}`,
+        },
+      });
+
+      return { user: response.data };
+    } catch (error: any) {
+      return rejectWithValue("Failed to load user");
+    }
+  }
+);
+
+export const authSlice = createSlice({
+  name: "auth",
+  initialState,
+  reducers: {},
   extraReducers: (builder) => {
     builder
       .addCase(loginUser.pending, (state) => {
@@ -128,15 +125,19 @@ export const authSlice = createSlice({
         state.loading = false;
         state.error = action.payload as string;
       })
+      .addCase(loadUser.fulfilled, (state, action) => {
+        state.isAuthenticated = true;
+        state.user = action.payload.user;
+      })
+      .addCase(loadUser.rejected, (state) => {
+        state.isAuthenticated = false;
+        state.user = null;
+      })
       .addCase(logoutUser.fulfilled, (state) => {
         state.isAuthenticated = false;
         state.user = null;
       });
-    }
+  },
 });
 
-//export const { Logout, LoginSuccess} = authSlice.actions
-// Other code such as selectors can use the imported `RootState` type
-//export const selectAuth = (state: RootState) => state.auth.isLoggedIn
-//export const selectUser = (state: RootState) => state.auth.user
 export default authSlice.reducer

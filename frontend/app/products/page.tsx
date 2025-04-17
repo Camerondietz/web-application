@@ -29,6 +29,7 @@ export default function ProductsPage() {
   // Get filters from URL
   const category = searchParams.get("category");
   const keyword = searchParams.get("keyword");
+  const manufacturer = searchParams.get("manufacturer");
 
   // Fetch products from backend
   const fetchProducts = async (reset = false) => {
@@ -36,6 +37,7 @@ export default function ProductsPage() {
     try {
       const query = new URLSearchParams({ page: page.toString() });
       if (category) query.append("category", category);
+      if (manufacturer) query.append("manufacturer", manufacturer);
       if (keyword) query.append("keyword", keyword);
 
       const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/products?${query.toString()}`);
@@ -113,16 +115,16 @@ export default function ProductsPage() {
           products.map((product) => (
             <Link key={product.id} href={`/products/${product.id}`} passHref>
               <motion.div 
-                className="bg-white shadow-lg rounded-xl p-4 cursor-pointer hover:shadow-2xl transition duration-300"
+                className="bg-gray-100 dark:bg-gray-800 shadow-lg rounded-xl p-4 cursor-pointer hover:shadow-2xl transition duration-300"
                 whileHover={{ scale: 1.05 }}
               >
                 <img
-                  src={product.image || "/placeholder.png"} // Handle missing images
+                  src={product.image ? `${process.env.NEXT_PUBLIC_API_URL}${product.image}` : "@/public/placeholder.jpg"} // Handle missing images
                   alt={product.name || "No Name"}
                   className="w-full h-40 object-cover rounded-lg"
                 />
                 <h2 className="mt-3 text-lg font-semibold">{product.name || "Unnamed Product"}</h2>
-                <p className="text-gray-500 text-sm">{product.category?.name || "No Category"}</p>
+                <p className="text-gray-700 dark:text-gray-300 text-sm">{product.category?.name || "No Category"}</p>
                 <p className="mt-2 text-xl font-bold text-blue-600">
                   ${product.price ? product.price.toFixed(2) : "N/A"}
                 </p>
@@ -130,7 +132,7 @@ export default function ProductsPage() {
             </Link>
           ))
         ) : (
-          <p className="text-center text-gray-500">No products found.</p>
+          <p className="text-center text-gray-700 dark:text-gray-300">No products found.</p>
         )}
       </motion.div>
 
@@ -144,7 +146,7 @@ export default function ProductsPage() {
         </button>
       )}
 
-      {loading && <p className="text-center text-gray-500 mt-4">Loading...</p>}
+      {loading && <p className="text-center text-gray-700 dark:text-gray-300 mt-4">Loading...</p>}
     </div>
   );
 }

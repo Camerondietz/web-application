@@ -1,7 +1,8 @@
+import os
 from django.http import HttpResponse,JsonResponse
 from django.shortcuts import render, get_object_or_404
 from django.core.paginator import Paginator
-from .models import Category, Product
+from .models import Category, Product, Manufacturer
 from .serializers import CategorySerializer, ProductSerializer
 from rest_framework.decorators import api_view, permission_classes
 from rest_framework.permissions import IsAuthenticated
@@ -12,6 +13,8 @@ from django.contrib.auth.models import User
 from django.contrib.auth.hashers import check_password, make_password
 from django.contrib.auth import authenticate
 from django.db.models import Q
+from django.conf import settings
+import stripe
 
 #from django.views.decorators.csrf import csrf_protect
 
@@ -48,10 +51,11 @@ def categories(request):
 @api_view(['GET'])
 def category_list(request):
     parent_id = request.GET.get('parent')
-    if parent_id:
-        categories = Category.objects.filter(parent_category_id=parent_id)
-    else:
+    # Handle 'null' or empty parent_id as root categories
+    if not parent_id or parent_id == 'null':
         categories = Category.objects.filter(parent_category__isnull=True)
+    else:
+        categories = Category.objects.filter(parent_category_id=parent_id)
     data = [
         {
             "id": cat.id,
@@ -60,6 +64,19 @@ def category_list(request):
             "has_subcategories": cat.subcategories.exists()  # Check if it has children
         }
         for cat in categories
+    ]
+    return JsonResponse(data, safe=False)
+
+#Get manufacturers
+@api_view(['GET'])
+def manufacturer_list(request):
+    manufacturers = Manufacturer.objects.all()
+    data = [
+        {
+            "id": man.id,
+            "name": man.name,
+        }
+        for man in manufacturers
     ]
     return JsonResponse(data, safe=False)
 
@@ -72,6 +89,7 @@ def product_detail(request, product_id):
 @api_view(['GET'])
 def product_list(request):
     category_id = request.GET.get('category')
+    manufacturer_id = request.GET.get('manufacturer')
     keyword = request.GET.get('keyword')
     page = int(request.GET.get('page', 1))
     page_size = 12  # Number of products per page
@@ -87,6 +105,9 @@ def product_list(request):
             products = products.filter(category_id__in=category_ids)
         except Category.DoesNotExist:
             return JsonResponse({'error': 'Category not found'}, status=404)
+    #Filter by manufacturer
+    if manufacturer_id:
+        products = products.filter(manufacturer_id=manufacturer_id)
 
     # Filter by keyword (searching in name and description)
     if keyword:
@@ -128,6 +149,18 @@ def login_user(request):
     else:
         return Response({"error": "Invalid credentials"}, status=status.HTTP_401_UNAUTHORIZED)
 
+@api_view(['GET'])
+@permission_classes([IsAuthenticated])
+def get_auth_details(request):
+    """Returns basic info of the authenticated user"""
+    user = request.user
+    return Response({
+        "id": user.id,
+        "first_name": user.first_name,
+        "last_name": user.last_name,
+        "email": user.email,
+        "username": user.username,
+    }, status=status.HTTP_200_OK)
 
 #`logout_request` view to handle sign-out requests
 #@csrf_protect
@@ -236,3 +269,74 @@ def change_password(request):
     user.save()
     
     return Response({"message": "Password updated successfully"}, status=status.HTTP_200_OK)
+
+#payment handeling
+stripe.api_key = settings.STRIPE_SECRET_KEY
+#stripe.api_version = '2025-03-31.basil'
+@api_view(['POST'])
+def create_checkout_session(request):
+    try:
+        session = stripe.checkout.Session.create(
+          line_items=[
+            {
+              "price_data": {
+                "currency": "usd",
+                "product_data": {"name": "T-shirt"},
+                "unit_amount": 2000,
+              },
+              "quantity": 1,
+            },
+          ],
+          mode="payment",
+          ui_mode="custom",
+          # The URL of your payment completion page
+          return_url=settings.FRONTEND_URL + "/checkout/success?session_id={CHECKOUT_SESSION_ID}",
+        )
+        return Response({
+            'clientSecret': session.client_secret
+        })
+    except Exception as e:
+        return Response({"error": str(e)}, status=status.HTTP_400_BAD_REQUEST)
+    
+@api_view(['POST'])
+def webhook(request):
+    payload = request.body
+    sig_header = request.META.get('HTTP_STRIPE_SIGNATURE')
+    event = None
+
+    try:
+        event = stripe.Webhook.construct_event(
+            payload, sig_header
+        )
+    except ValueError as e:
+        # Invalid payload
+        return HttpResponse(status=400)
+    except stripe.error.SignatureVerificationError as e:
+        # Invalid signature
+        return HttpResponse(status=400)
+
+    # Handle the event
+    if event['type'] == 'checkout.session.completed':
+        session = event['data']['object']
+
+        # You can lookup user/order by session.client_reference_id or metadata
+        print("Payment successful for session:", session['id'])
+        # TODO: Mark order as paid in your database
+
+    return HttpResponse(status=200)
+
+@api_view(["POST"])
+def create_payment_intent(request):
+    #from stripe import PaymentIntent
+    try:
+        amount = 5000 #amount = request.data.get("amount")  # Validate this securely
+        #currency = request.data.get("currency", "usd")
+
+        intent = stripe.PaymentIntent.create(
+            amount=amount,
+            currency='usd', #currency,
+            automatic_payment_methods={"enabled": True},
+        )
+        return Response({"clientSecret": intent.client_secret})
+    except Exception as e:
+        return JsonResponse({'error': str(e)}, status=400)

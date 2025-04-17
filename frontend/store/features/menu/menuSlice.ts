@@ -3,9 +3,19 @@ import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 // Fetch categories from Django backend
 export const fetchCategories = createAsyncThunk(
   "menu/fetchCategories",
-  async (parentId = null) => {
+  async (parentId) => {
     const response = await fetch(
-      `${process.env.NEXT_PUBLIC_API_URL}/api/categories?parent=${parentId || ""}`
+      `${process.env.NEXT_PUBLIC_API_URL}/api/categories?parent=${parentId}`
+    );
+    return await response.json();
+  }
+);
+// Fetch manufacturers from Django backend
+export const fetchManufacturers = createAsyncThunk(
+  "menu/fetchManufacturers",
+  async () => {
+    const response = await fetch(
+      `${process.env.NEXT_PUBLIC_API_URL}/api/manufacturers`
     );
     return await response.json();
   }
@@ -14,6 +24,7 @@ export const fetchCategories = createAsyncThunk(
 const initialState = {
   isOpen: false,
   categories: [],
+  manufacturers: [],
   currentParentId: null, // Keeps track of selected parent category
   loading: false,
   error: null,
@@ -39,17 +50,31 @@ const menuSlice = createSlice({
   },
   extraReducers: (builder) => {
     builder
-      .addCase(fetchCategories.pending, (state) => {
-        state.loading = true;
-      })
-      .addCase(fetchCategories.fulfilled, (state, action) => {
-        state.loading = false;
-        state.categories = action.payload;
-      })
-      .addCase(fetchCategories.rejected, (state, action) => {
-        state.loading = false;
-        state.error = action.error.message;
-      });
+    // Categories
+    .addCase(fetchCategories.pending, (state) => {
+      state.loading = true;
+    })
+    .addCase(fetchCategories.fulfilled, (state, action) => {
+      state.loading = false;
+      state.categories = action.payload;
+    })
+    .addCase(fetchCategories.rejected, (state, action) => {
+      state.loading = false;
+      state.error = action.error.message;
+    })
+
+    // Manufacturers
+    .addCase(fetchManufacturers.pending, (state) => {
+      state.loading = true;
+    })
+    .addCase(fetchManufacturers.fulfilled, (state, action) => {
+      state.loading = false;
+      state.manufacturers = action.payload;
+    })
+    .addCase(fetchManufacturers.rejected, (state, action) => {
+      state.loading = false;
+      state.error = action.error.message;
+    });
   },
 });
 
