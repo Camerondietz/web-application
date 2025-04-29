@@ -57,18 +57,18 @@ export default function Home() {
 
         <div className="mx-auto max-w-7xl px-4 py-6 sm:px-6 lg:px-8">
           <section className="rounded bg-gray-100 dark:bg-gray-800 py-8 sm:py-12">
-            <div className="mx-auto grid grid-cols-1 items-center justify-items-center gap-8 px-8 sm:px-16 md:grid-cols-2">
+            <div className="mx-auto grid grid-cols-1 items-center justify-items-center gap-8 px-8 sm:px-16 md:grid-cols-1">
               <div className="max-w-md space-y-4 items-center" >
-                <h2 className="text-3xl font-bold tracking-tight md:text-4xl">
+                <h2 className="text-3xl font-bold tracking-tight md:text-4xl items-center">
                   Welcome to My Ecommerce
                 </h2>
-                <p className="text-gray-700 dark:text-gray-300">
+                <p className="text-gray-700 dark:text-gray-300 items-center">
                 Explore our extensive range of high-quality products designed to power your business forward. From cutting-edge networking components and industrial automation systems to essential industrial tools and safety equipment, we provide the solutions you need to keep your operations running smoothly. Whether you're looking to optimize efficiency, enhance safety, or scale your infrastructure, our products and expertise are here to help you achieve your goals with confidence. Shop now for reliable, high-performance solutions that drive success.
                 <br></br>
                 Your industrial success starts here.
                 </p>
                 <br></br>
-                <Link href="/products" className="text-gray-700 dark:text-gray-300"
+                <Link href="/products" className="text-lg border-2 border-b-blue-300 px-6 py-3 mt-4 shadow-md hover:shadow-lg transition duration-200"
                 >Search our Products</Link>
                 <br></br>
                 </div>

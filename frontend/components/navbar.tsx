@@ -88,7 +88,9 @@ const Navbar = () => {
       <div>
         {loggedIn ? (
           <div className="flex items-center space-x-2">
-            <span>{username}</span>
+            <Link className="px-2" href="/account">
+              {username}
+            </Link>
             <button className="px-2" onClick={handleLogout}>
               Logout
             </button>

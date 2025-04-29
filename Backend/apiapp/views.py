@@ -297,7 +297,11 @@ def create_checkout_session(request):
         })
     except Exception as e:
         return Response({"error": str(e)}, status=status.HTTP_400_BAD_REQUEST)
-    
+
+@api_view(['POST'])
+def get_config(request):
+    return Response({'publishableKey': os.getenv('STRIPE_PUBLISHABLE_KEY')})
+
 @api_view(['POST'])
 def webhook(request):
     payload = request.body

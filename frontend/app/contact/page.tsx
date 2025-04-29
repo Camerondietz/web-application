@@ -84,9 +84,9 @@ export default function ContactPage() {
 
       {/* Contact Information Section */}
       <div className="mt-8 text-center text-gray-700 dark:text-gray-300">
-        <p className="font-semibold">Email: support@yourbusiness.com</p>
-        <p className="font-semibold">Phone: (123) 456-7890</p>
-        <p className="font-semibold">Address: 123 Business St, Austin, TX</p>
+        <p className="font-semibold">Email: dietz.cameron@gmail.com</p>
+        <p className="font-semibold">Phone: (512) 750-7411</p>
+        <p className="font-semibold">Address: Austin, TX</p>
       </div>
     </div>
   );

@@ -13,14 +13,14 @@ export default function ResourcesPage() {
     { title: "FAQs", path: "/faq" },
     { title: "Changelog", path: "/changelog" },*/
     { title: "Calculate", path: "/resources/calculate" },
-    { title: "Solve", path: "/resources/solve" },
+    { title: "AI Assistance", path: "/resources/get-help" },
     { title: "Learn", path: "/resources/learn" },
   ];
 
   return (
     <div className="container mx-auto px-4 py-10">
       <h1 className="text-3xl font-bold text-center mb-6">Resources</h1>
-      <p className="text-lg text-center text-gray-600 mb-8">
+      <p className="text-lg text-center text-gray-600 dark:text-gray-400 mb-8">
         Explore our resources to get the most out of our platform.
       </p>
 
@@ -29,9 +29,9 @@ export default function ResourcesPage() {
           <Link
             key={resource.path}
             href={resource.path}
-            className="block p-4 bg-white shadow-lg rounded-lg hover:shadow-xl transition-transform transform hover:scale-105 text-center"
+            className="block p-4 bg-gray-50 dark:bg-gray-800 shadow-lg rounded-lg hover:shadow-xl transition-transform transform hover:scale-105 text-center"
           >
-            <span className="text-xl font-semibold text-blue-600">{resource.title}</span>
+            <span className="text-xl font-semibold text-gray-600 dark:text-gray-400">{resource.title}</span>
           </Link>
         ))}
       </div>

@@ -7,9 +7,11 @@ import { useEffect, useRef, useState } from "react";
 import { X } from "lucide-react";
 import { motion } from "framer-motion";
 import Link from "next/link";
+import type { AppDispatch } from '@/store/store'; // adjust path based on your project
+
 
 export default function Sidebar() {
-  const dispatch = useDispatch();
+  //const dispatch = useDispatch();
   const router = useRouter();
   const isOpen = useSelector((state: RootState) => state.menu.isOpen);
   // Redux hooks for categories
@@ -20,14 +22,20 @@ export default function Sidebar() {
   //const currentManufacturerParentId = useSelector((state: RootState) => state.menu.currentManufacturerParentId);
   const loading = useSelector((state: RootState) => state.menu.loading);
   const sidebarRef = useRef<HTMLDivElement>(null);
+  const dispatch = useDispatch<AppDispatch>();
+
 
   const [showCategories, setShowCategories] = useState(false);
   const [showManufacturers, setShowManufacturers] = useState(false);
+  const [categoryHistory, setCategoryHistory] = useState<number[]>([]);
+
 
   // Fetch categories when sidebar opens or when parent changes
   useEffect(() => {
     if (showCategories && isOpen) {
-      dispatch(fetchCategories(currentParentId));
+      if (currentParentId != null) {
+        dispatch(fetchCategories(currentParentId));
+      }
     }
   }, [showCategories, isOpen, currentParentId, dispatch]);
 
@@ -87,7 +95,7 @@ useEffect(() => {
         initial={{ x: "-100%" }}
         animate={{ x: isOpen ? "0%" : "-100%" }}
         transition={{ duration: 0.3 }}
-        className="fixed top-0 left-0 h-screen w-64 bg-gray-100 dark:bg-gray-800 text-gray-700 dark:text-gray-300 shadow-lg z-50"
+        className="fixed top-0 left-0 h-screen w-64 bg-gray-100 dark:bg-gray-800 text-gray-700 dark:text-gray-300 shadow-lg z-50 overflow-y-auto"
       >
         <button
           onClick={() => dispatch(closeMenu())}
@@ -105,6 +113,7 @@ useEffect(() => {
               { name: "Cart", path: "/cart" },
               { name: "Account", path: "/account" },
               { name: "AI Tool", path: "/resources/get-help" },
+              { name: "Resources", path: "/resources" },
               { name: "About Us", path: "/about" },
               { name: "Contact", path: "/contact" }
             ].map((item) => (
@@ -135,7 +144,12 @@ useEffect(() => {
                     <ul className="mt-2">
                       {currentParentId && (
                         <div className="justify-between">
-                          <button onClick={() => dispatch(setParentCategory(null))}
+                          <button
+                            onClick={() => {
+                              const prev = categoryHistory[categoryHistory.length - 1] ?? null;
+                              setCategoryHistory(prevHistory => prevHistory.slice(0, -1));
+                              dispatch(setParentCategory(prev));
+                            }}
                             className="py-2 cursor-pointer hover:bg-gray-200 dark:hover:bg-gray-700 px-2">
                             ← Back to Categories
                           </button>
@@ -150,11 +164,16 @@ useEffect(() => {
                         <li
                           key={category.id}
                           className="py-2 cursor-pointer hover:bg-gray-200 dark:hover:bg-gray-700 px-2"
-                          onClick={() =>
-                            category.has_subcategories
-                              ? dispatch(setParentCategory(category.id))
-                              : handleRouteClick(`/products?category=${category.id}`)
-                          }
+                          onClick={() => {
+                            if (category.has_subcategories) {
+                              if (currentParentId !== null) {
+                                setCategoryHistory(prev => [...prev, currentParentId]);
+                              }
+                              dispatch(setParentCategory(category.id));
+                            } else {
+                              handleRouteClick(`/products?category=${category.id}`);
+                            }
+                          }}
                         >{category.name}</li>
                       ))}
                     </ul>

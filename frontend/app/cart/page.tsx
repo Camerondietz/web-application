@@ -20,9 +20,9 @@ export default function CartPage() {
       {cart.length === 0 ? (
         <p className="text-center text-gray-500">Your cart is empty. <Link href="/products" className="text-blue-600 underline">Shop now</Link>.</p>
       ) : (
-        <div className="shadow-lg bg-gray-100 dark:bg-gray-800 text-gray-700 dark:text-gray-300 rounded-lg p-6">
-          <div className="overflow-x-auto">
-            <table className="w-full border-collapse">
+        <div className="shadow-lg bg-gray-100 dark:bg-gray-800 text-gray-700 dark:text-gray-300 rounded-lg p-4 sm:p-6">
+          <div className="w-full overflow-x-auto">
+            <table className="min-w-[600px] w-full border-collapse">
               <thead>
                 <tr className="text-left">
                   <th className="p-3">Product</th>
@@ -37,7 +37,7 @@ export default function CartPage() {
                   <tr key={item.id} className="border-b">
                     <td className="p-3 flex items-center">
                       <img src={item.image ? `${process.env.NEXT_PUBLIC_API_URL}${item.image}` : "@/public/placeholder.jpg"} alt={item.name} className="w-16 h-16 object-cover rounded mr-4" />
-                      <Link href={`/products/${item.id}`} className="text-blue-600 hover:underline">{item.name}</Link>
+                      <Link href={`/products/${item.id}`} className="dark:text-blue-200 text-blue-600 hover:underline">{item.name}</Link>
                     </td>
                     <td className="p-3 text-center">
                       <div className="flex items-center justify-center">
@@ -71,7 +71,9 @@ export default function CartPage() {
           </div>
 
           <div className="flex justify-between items-center mt-6">
-            <p className="text-xl font-bold">Total: ${total.toFixed(2)}</p>
+          <p className="text-xl font-bold">
+            Total: ${total.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
+          </p>
             <Link href={`/checkout`} className="px-6 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700">
               Checkout
             </Link>

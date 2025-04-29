@@ -1,6 +1,16 @@
 "use client";
 import { useState } from "react";
 
+import ResistorColorCodeCalculator from "@/components/Calculate/ResistorCodeCalculator"; // adjust path as needed
+import VoltageDividerCalculator from "@/components/Calculate/VoltageDividerCalculator";
+import CapacitorValueCalculator from "@/components/Calculate/CapacitorValueCalculator";
+import InductorSelectionCalculator from "@/components/Calculate/InductorSelectionCalculator";
+import PowerDissipationCalculator from "@/components/Calculate/PowerDissipationCalculator";
+import WireGaugeSelector from "@/components/Calculate/WireGaugeSelector";
+import ThermalResistanceCalculator from "@/components/Calculate/ThermalResistanceCalculator";
+import FrequencyCalculator from "@/components/Calculate/FrequencyCalculator";
+
+
 export default function CalculatePage() {
   // Ohm's Law states: V = IR
   const [voltage, setVoltage] = useState<number | "">("");
@@ -17,15 +27,16 @@ export default function CalculatePage() {
     }
   };
 
+
   return (
     <div className="container mx-auto px-4 py-10">
       <h1 className="text-3xl font-bold text-center mb-6">Engineering Calculators</h1>
-      <p className="text-lg text-center text-gray-600 mb-8">
+      <p className="text-lg text-center text-gray-700 dark:text-gray-300 mb-8">
         Use these tools to simplify calculations and select the right components for your projects.
       </p>
 
       {/* Ohm's Law Calculator */}
-      <div className="bg-white shadow-lg rounded-lg p-6 mb-6">
+      <div className="bg-gray-100 dark:bg-gray-800 text-gray-700 dark:text-gray-300 shadow-lg rounded-lg p-6 mb-6">
         <h2 className="text-xl font-bold mb-4">Ohm’s Law Calculator</h2>
         <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
           <input
@@ -56,48 +67,49 @@ export default function CalculatePage() {
         >
           Calculate
         </button>
+        <p>Ohm's Law states: V = IR</p>
       </div>
 
       {/* Placeholder for additional calculators */}
-      <div className="bg-white shadow-lg rounded-lg p-6 mb-6">
+      <div className="bg-gray-100 dark:bg-gray-800 shadow-lg rounded-lg p-6 mb-6">
         <h2 className="text-xl font-bold mb-4">Resistor Color Code Calculator</h2>
-        <p className="text-gray-600">[Future implementation: Select colors to get resistance value]</p>
+        <ResistorColorCodeCalculator />
       </div>
 
-      <div className="bg-white shadow-lg rounded-lg p-6 mb-6">
+      <div className="bg-gray-100 dark:bg-gray-800 shadow-lg rounded-lg p-6 mb-6">
         <h2 className="text-xl font-bold mb-4">Voltage Divider Calculator</h2>
-        <p className="text-gray-600">[Future implementation: Enter R1, R2, and input voltage]</p>
+        <VoltageDividerCalculator />
       </div>
 
-      <div className="bg-white shadow-lg rounded-lg p-6 mb-6">
+      <div className="bg-gray-100 dark:bg-gray-800 shadow-lg rounded-lg p-6 mb-6">
         <h2 className="text-xl font-bold mb-4">Capacitor Value Calculator</h2>
-        <p className="text-gray-600">[Future implementation: Enter capacitance, frequency, etc.]</p>
+        <CapacitorValueCalculator />
       </div>
 
-      <div className="bg-white shadow-lg rounded-lg p-6 mb-6">
+      <div className="bg-gray-100 dark:bg-gray-800 shadow-lg rounded-lg p-6 mb-6">
         <h2 className="text-xl font-bold mb-4">Inductor Selection</h2>
-        <p className="text-gray-600">[Future implementation: Enter inductance, frequency, etc.]</p>
-      </div>
+        <InductorSelectionCalculator />
+        </div>
 
-      <div className="bg-white shadow-lg rounded-lg p-6 mb-6">
+      <div className="bg-gray-100 dark:bg-gray-800 shadow-lg rounded-lg p-6 mb-6">
         <h2 className="text-xl font-bold mb-4">Power Dissipation Calculator</h2>
-        <p className="text-gray-600">[Future implementation: Enter voltage, current, resistance]</p>
-      </div>
+        <PowerDissipationCalculator />
+        </div>
 
-      <div className="bg-white shadow-lg rounded-lg p-6 mb-6">
+      <div className="bg-gray-100 dark:bg-gray-800 shadow-lg rounded-lg p-6 mb-6">
         <h2 className="text-xl font-bold mb-4">Wire Gauge Selector</h2>
-        <p className="text-gray-600">[Future implementation: Choose wire size based on current]</p>
-      </div>
+        <WireGaugeSelector />
+        </div>
 
-      <div className="bg-white shadow-lg rounded-lg p-6 mb-6">
+      <div className="bg-gray-100 dark:bg-gray-800 shadow-lg rounded-lg p-6 mb-6">
         <h2 className="text-xl font-bold mb-4">Thermal Resistance Calculator</h2>
-        <p className="text-gray-600">[Future implementation: Calculate heat dissipation]</p>
-      </div>
+        <ThermalResistanceCalculator />
+        </div>
 
-      <div className="bg-white shadow-lg rounded-lg p-6 mb-6">
+      <div className="bg-gray-100 dark:bg-gray-800 shadow-lg rounded-lg p-6 mb-6">
         <h2 className="text-xl font-bold mb-4">Frequency Calculator</h2>
-        <p className="text-gray-600">[Future implementation: Enter time period or wavelength]</p>
-      </div>
+        <FrequencyCalculator />
+        </div>
     </div>
   );
 }
@@ -133,7 +145,7 @@ export default function CalculatePage() {
           <Link
             key={tool.path}
             href={tool.path}
-            className="block p-4 bg-white shadow-lg rounded-lg hover:shadow-xl transition-transform transform hover:scale-105 text-center"
+            className="block p-4 bg-gray-100 dark:bg-gray-800 shadow-lg rounded-lg hover:shadow-xl transition-transform transform hover:scale-105 text-center"
           >
             <span className="text-xl font-semibold text-blue-600">{tool.title}</span>
           </Link>

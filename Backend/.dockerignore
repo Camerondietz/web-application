@@ -1,0 +1,8 @@
+# Ignore virtual environments
+venv/
+env/
+.venv/
+
+# Ignore git and other version control directories
+.git/
+.gitignore

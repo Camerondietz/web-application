@@ -3,7 +3,7 @@ import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 // Fetch categories from Django backend
 export const fetchCategories = createAsyncThunk(
   "menu/fetchCategories",
-  async (parentId) => {
+  async (parentId: number | undefined) => {
     const response = await fetch(
       `${process.env.NEXT_PUBLIC_API_URL}/api/categories?parent=${parentId}`
     );
@@ -21,13 +21,22 @@ export const fetchManufacturers = createAsyncThunk(
   }
 );
 
-const initialState = {
+type MenuState = {
+  isOpen: boolean;
+  categories: any[]; // or specific type
+  manufacturers: any[];
+  currentParentId: number | null;
+  loading: boolean;
+  error: string | undefined;
+};
+
+const initialState: MenuState = {
   isOpen: false,
   categories: [],
   manufacturers: [],
-  currentParentId: null, // Keeps track of selected parent category
+  currentParentId: null,
   loading: false,
-  error: null,
+  error: undefined,
 };
 
 const menuSlice = createSlice({

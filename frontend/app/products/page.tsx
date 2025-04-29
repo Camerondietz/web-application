@@ -1,10 +1,10 @@
 "use client";
-
 import { useState, useEffect } from "react";
 import { useSearchParams, useRouter } from "next/navigation";
 import Link from "next/link";
 import { motion } from "framer-motion";
 import Image from 'next/image'
+import { Suspense } from 'react';
 
 interface Product {
   id: number;
@@ -105,9 +105,9 @@ export default function ProductsPage() {
       </div> */}
       
       {/* Products Grid */}
+      <Suspense fallback={<div>Loading products...</div>}>
       <motion.div 
-        className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6"
-        initial={{ opacity: 0 }} 
+        className="grid grid-cols-2 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4"        initial={{ opacity: 0 }} 
         animate={{ opacity: 1 }} 
         transition={{ duration: 0.5 }}
       >
@@ -115,7 +115,7 @@ export default function ProductsPage() {
           products.map((product) => (
             <Link key={product.id} href={`/products/${product.id}`} passHref>
               <motion.div 
-                className="bg-gray-100 dark:bg-gray-800 shadow-lg rounded-xl p-4 cursor-pointer hover:shadow-2xl transition duration-300"
+                className="bg-gray-100 dark:bg-gray-800 overflow-hidden shadow-lg rounded-xl p-4 cursor-pointer hover:shadow-2xl transition duration-300"
                 whileHover={{ scale: 1.05 }}
               >
                 <img
@@ -123,10 +123,10 @@ export default function ProductsPage() {
                   alt={product.name || "No Name"}
                   className="w-full h-40 object-cover rounded-lg"
                 />
-                <h2 className="mt-3 text-lg font-semibold">{product.name || "Unnamed Product"}</h2>
+                <h2 className="mt-3 text-lg break-words font-semibold">{product.name || "Unnamed Product"}</h2>
                 <p className="text-gray-700 dark:text-gray-300 text-sm">{product.category?.name || "No Category"}</p>
-                <p className="mt-2 text-xl font-bold text-blue-600">
-                  ${product.price ? product.price.toFixed(2) : "N/A"}
+                <p className="mt-2 text-xl font-bold text-gray-700 dark:text-gray-300">
+                ${product.price.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
                 </p>
               </motion.div>
             </Link>
@@ -135,7 +135,7 @@ export default function ProductsPage() {
           <p className="text-center text-gray-700 dark:text-gray-300">No products found.</p>
         )}
       </motion.div>
-
+      </Suspense>
       {/* Load More Button */}
       {hasMore && (
         <button

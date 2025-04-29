@@ -1,10 +1,12 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 //import { Button } from "@/components/ui/button"; // Replace with your UI library
 //import { Input } from "@/components/ui/input";
 //import { Textarea } from "@/components/ui/textarea";
 import { Loader2 } from "lucide-react"; // Optional loading icon
+import AIChatDisclaimer from "@/components/AIChatDisclaimer"; // Import the disclaimer
+
 
 type Product = {
   id: number;
@@ -18,6 +20,8 @@ export default function GetHelpPage() {
   const [products, setProducts] = useState<Product[]>([]);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
+  const [disclaimerVisible, setDisclaimerVisible] = useState<boolean>(true); // State to control popup visibility
+
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -49,8 +53,24 @@ export default function GetHelpPage() {
     }
   };
 
+  const handleCloseDisclaimer = () => {
+    setDisclaimerVisible(false);
+  };
+
+  useEffect(() => {
+    // Auto-hide the disclaimer after 10 seconds (optional)
+    const timer = setTimeout(() => {
+      setDisclaimerVisible(false);
+    }, 10000);
+
+    return () => clearTimeout(timer);
+  }, []);
+
   return (
     <main className="max-w-3xl mx-auto p-6 mt-10 pb-10">
+      {/* Show Disclaimer Modal if visible */}
+      {disclaimerVisible && <AIChatDisclaimer onClose={handleCloseDisclaimer} />}
+
       <h1 className="text-3xl font-bold mb-4 text-center">Get Help</h1>
       <p className="text-center text-gray-500 mb-6">
         Describe your problem or what you're looking for, and our AI will assist you.

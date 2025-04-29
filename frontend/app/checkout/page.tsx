@@ -4,6 +4,7 @@
 import { useEffect, useState } from "react";
 import { loadStripe } from "@stripe/stripe-js";
 import { Elements } from "@stripe/react-stripe-js";
+import { StripeElementsOptions } from '@stripe/stripe-js';
 import CheckoutForm from "@/components/stripe/CheckoutForm";
 
 const stripePromise = loadStripe(process.env.NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY!);
@@ -25,12 +26,15 @@ export default function CheckoutPage() {
       .then((data) => setClientSecret(data.clientSecret));
   }, []);
 
-  const appearance = {
-    theme: 'Default',
-    variables: { colorPrimaryText: '#155dfc' }
+  const appearance: StripeElementsOptions['appearance'] = {
+    theme: 'stripe', // Valid theme
+    variables: {
+      colorPrimaryText: '#155dfc',
+    },
   };
-  const options = {
-    clientSecret,
+  
+  const options: StripeElementsOptions = {
+    clientSecret: clientSecret!,
     appearance,
   };
 

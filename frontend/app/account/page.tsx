@@ -6,6 +6,7 @@ import { useSelector } from "react-redux";
 import { RootState } from "@/store/store";
 import axios from "axios";
 import Cookies from "js-cookie";
+import Link from "next/link";
 
 const API_URL = process.env.NEXT_PUBLIC_API_URL;
 
@@ -107,7 +108,12 @@ export default function AccountPage() {
 
   return (
     <div className="container mx-auto px-4 py-10 max-w-lg">
-      <h1 className="text-3xl font-bold text-center dark:text-white">Account Details</h1>
+
+      <h2 className="text-2xl font-bold text-center mt-8 dark:text-white">Orders</h2>
+      <Link href="/orders" className="bg-blue-500 m-3 hover:bg-blue-600 text-white font-bold py-2 px-4 rounded-lg items-center w-full"
+      > See orders</Link>
+
+      <h2 className="text-3xl font-bold text-center dark:text-white">Account Details</h2>
 
       {/* Account Info Update */}
       {error && <p className="text-red-500 text-center mt-2">{error}</p>}

@@ -30,6 +30,7 @@ urlpatterns = [
     path('register/', views.register_user, name='register'),
     path('token/', TokenObtainPairView.as_view(), name='token_obtain_pair'),
     path('token/refresh/', TokenRefreshView.as_view(), name='token_refresh'),
+    
     path('auth/', views.get_auth_details),
     # Path for login
     path('login/', views.login_user, name='login'),
@@ -40,10 +41,15 @@ urlpatterns = [
     path("account/", views.get_account_details, name="account-details"),
     path("account/update/", views.update_account_details, name="account-update"),
     path("account/change-password/", views.change_password, name="account-change-password"),
-    path('create-checkout-session', views.create_checkout_session, name='logout'),
-    path('create-checkout-session/', views.create_checkout_session, name='logout'),
-    path('webhook', views.webhook, name='logout'),
-    path('webhook/', views.webhook, name='logout'),
-    path('create-payment-intent', views.create_payment_intent, name='logout'),
-    path('create-payment-intent/', views.create_payment_intent, name='logout'),
+
+    path('create-checkout-session', views.create_checkout_session),
+    path('create-checkout-session/', views.create_checkout_session),
+    path('webhook', views.webhook),
+    path('webhook/', views.webhook),
+    path('create-payment-intent', views.create_payment_intent),
+    path('create-payment-intent/', views.create_payment_intent),
+    path('get-config', views.get_config),
+    path('get-config/', views.get_config),
+
+
 ]
