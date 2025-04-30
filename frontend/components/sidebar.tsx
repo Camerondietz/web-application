@@ -33,9 +33,9 @@ export default function Sidebar() {
   // Fetch categories when sidebar opens or when parent changes
   useEffect(() => {
     if (showCategories && isOpen) {
-      if (currentParentId != null) {
+      //if (currentParentId != null) {
         dispatch(fetchCategories(currentParentId));
-      }
+      //}
     }
   }, [showCategories, isOpen, currentParentId, dispatch]);
 
@@ -167,7 +167,7 @@ useEffect(() => {
                           onClick={() => {
                             if (category.has_subcategories) {
                               if (currentParentId !== null) {
-                                setCategoryHistory(prev => [...prev, currentParentId]);
+                                setCategoryHistory(prev => [...prev, currentParentId as number]);
                               }
                               dispatch(setParentCategory(category.id));
                             } else {

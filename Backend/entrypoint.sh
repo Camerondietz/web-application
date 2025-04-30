@@ -1,11 +1,11 @@
 #!/bin/sh
-echo "📍 Current directory:"
+echo "Current directory:"
 pwd
 
-echo "📂 Listing current directory contents:"
+echo "Listing current directory contents:"
 ls -al
 
-echo "📁 Listing contents of /app:"
+echo "Listing contents of /app:"
 ls -al /app
 # Make migrations and migrate the database.
 echo "Making migrations and migrating the database. "

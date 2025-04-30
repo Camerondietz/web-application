@@ -21,7 +21,7 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en" className="h-full">
+    <html lang="en" className="h-full scheme-light">
       <body className="min-h-screen flex flex-col h-full bg-white text-black dark:bg-gray-900 dark:text-white transition-colors duration-300">
         <StoreProvider>
             <Navbar />
