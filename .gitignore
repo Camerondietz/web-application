@@ -10,6 +10,7 @@ docker-compose-production.yml
 venv
 
 #in progress
+node-service
 sentiment-microservice
 
 
