@@ -3,7 +3,7 @@ import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 // Fetch categories from Django backend
 export const fetchCategories = createAsyncThunk(
   "menu/fetchCategories",
-  async (parentId: number | null) => {
+  async (parentId: number | undefined) => {
     const response = await fetch(
       `${process.env.NEXT_PUBLIC_API_URL}/api/categories?parent=${parentId}`
     );

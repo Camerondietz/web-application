@@ -35,7 +35,7 @@ export default function CapacitorValueCalculator() {
   };
 
   return (
-    <div className="bg-gray-100 dark:bg-gray-800 text-gray-700 dark:text-gray-300 shadow-lg rounded-lg p-6 mb-6">
+    <div className="bg-gray-100 dark:bg-gray-800 shadow-lg rounded-lg p-6 mb-6">
       <h2 className="text-xl font-bold mb-4">Capacitor Value Calculator</h2>
       <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 mb-4">
         <div className="flex items-center">

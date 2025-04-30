@@ -3,12 +3,12 @@ credentials-file: /home/pi/.cloudflared/ecommerce-tunnel.json
 
 ingress:
   - hostname: ecommerce.cameron-dietz.com
-    service: http://next:3000
+    service: http://localhost:3000
 
   - hostname: api.cameron-dietz.com
-    service: http://django:8000
+    service: http://localhost:8000
 
   - hostname: service.cameron-dietz.com
-    service: http://node-service:4000
+    service: http://localhost:4000
 
   - service: http_status:404

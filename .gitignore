@@ -1,11 +1,5 @@
 # See https://help.github.com/articles/ignoring-files/ for more about ignoring files.
 
-#classified
-docker-compose.yml
-config.yml
-.env
-docker-compose-production.yml
-
 #virtual env
 venv
 

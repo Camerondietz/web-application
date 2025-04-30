@@ -17,9 +17,7 @@ interface Product {
   } | null; // Category could be null, so handle that cas
 }
 
-
-
-function ProductsList() {
+export default function ProductsPage() {
   const searchParams = useSearchParams();
   const router = useRouter();
 
@@ -151,15 +149,6 @@ function ProductsList() {
       {loading && <p className="text-center text-gray-700 dark:text-gray-300 mt-4">Loading...</p>}
     </div>
   );
-}
-
-export default function ProductsPage() {
-  return (
-    // You could have a loading skeleton as the `fallback` too
-    <Suspense fallback={<div>Loading filters...</div>}>
-      <ProductsList />
-    </Suspense>
-  )
 }
 
 /*"use client";
