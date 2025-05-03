@@ -3,8 +3,11 @@
 #virtual env
 venv
 
+docker-compose-production.yml
+docker-compose-production
+
+
 #in progress
-node-service
 sentiment-microservice
 
 
