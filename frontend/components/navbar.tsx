@@ -129,7 +129,7 @@ const Navbar = () => {
 
       {/* Mobile Search Bar (Appears Below Navbar) */}
       {searchOpen && (
-        <div className="absolute top-full left-0 w-full bg-gray-100 dark:bg-gray-800 p-2 border-t shadow-md md:hidden">
+        <div className="absolute z-50 top-full left-0 w-full bg-gray-100 dark:bg-gray-800 p-2 border-t shadow-md md:hidden">
           <form onSubmit={handleSearch} className="flex items-center border border-gray-300 rounded-lg px-2">
             <input
               type="text"
