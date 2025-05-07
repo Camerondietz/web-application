@@ -28,7 +28,7 @@ SECRET_KEY = 'django-insecure-c-2=d+g(3l7qt+xlk4mk%ngsdxpjffs1u!5fz!r=k_nkynj_df
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ["http://api.cameron-dietz.com","api.cameron-dietz.com","localhost","https://api.cameron-dietz.com"]
 
 
 # Application definition
@@ -51,6 +51,7 @@ INSTALLED_APPS = [
 MIDDLEWARE = [
     "corsheaders.middleware.CorsMiddleware",
     'django.middleware.security.SecurityMiddleware',
+    'whitenoise.middleware.WhiteNoiseMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
@@ -61,6 +62,17 @@ MIDDLEWARE = [
 
 CORS_ALLOWED_ORIGINS = [
     "http://localhost:3000",  # Allow only your frontend
+    "http://ecommerce.cameron-dietz.com",
+    "https://ecommerce.cameron-dietz.com",
+]
+
+CSRF_TRUSTED_ORIGINS = [
+    "https://api.cameron-dietz.com",
+    "https://ecommerce.cameron-dietz.com",
+    "https://service.cameron-dietz.com",
+    "http://api.cameron-dietz.com",
+    "http://ecommerce.cameron-dietz.com",
+    "http://service.cameron-dietz.com",  # if applicable
 ]
 
 CORS_ALLOW_CREDENTIALS = True  # Allow cookies or authentication headers
@@ -156,7 +168,7 @@ USE_TZ = True
 
 STATIC_URL = '/static/'
 STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')  # or any folder you prefer
-
+STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
 STATICFILRS_DIR = [
     os.path.join(BASE_DIR, 'static')
 ]

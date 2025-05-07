@@ -1,4 +1,4 @@
-"use client";
+'use client';
 import { useState, useEffect } from "react";
 import { useSearchParams, useRouter } from "next/navigation";
 import Link from "next/link";
@@ -17,7 +17,15 @@ interface Product {
   } | null; // Category could be null, so handle that cas
 }
 
-export default function ProductsPage() {
+export default function Page() {
+  return (
+    <Suspense fallback={<div>Loading...</div>}>
+      <ProductsPage />
+    </Suspense>
+  );
+}
+
+function ProductsPage() {
   const searchParams = useSearchParams();
   const router = useRouter();
 
@@ -135,7 +143,7 @@ export default function ProductsPage() {
           <p className="text-center text-gray-700 dark:text-gray-300">No products found.</p>
         )}
       </motion.div>
-      </Suspense>
+      
       {/* Load More Button */}
       {hasMore && (
         <button
@@ -147,6 +155,7 @@ export default function ProductsPage() {
       )}
 
       {loading && <p className="text-center text-gray-700 dark:text-gray-300 mt-4">Loading...</p>}
+      </Suspense>
     </div>
   );
 }

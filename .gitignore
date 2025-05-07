@@ -5,6 +5,7 @@ venv
 
 docker-compose-production.yml
 docker-compose-production
+config.yml
 
 
 #in progress
