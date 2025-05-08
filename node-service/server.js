@@ -32,7 +32,7 @@ app.use(express.json());  // For parsing JSON in request bodies
 
 // app.use(cors());
 const corsOptions = {
-  origin: "http://localhost:3000", // Only allow requests from this origin
+  origin: ["http://localhost:3000","https://ecommerce.cameron-dietz.com", "https://ecommerce.cameron-dietz.com/"], // Only allow requests from this origin
 };
 
 app.use(cors(corsOptions));

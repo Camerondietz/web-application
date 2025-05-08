@@ -1,6 +1,6 @@
 import type { NextConfig } from "next";
 
-const nextConfig: NextConfig = {
+const nextConfig = {
   env: {
     NEXT_PUBLIC_API_URL: process.env.NEXT_PUBLIC_API_URL,
     NEXT_PUBLIC_node_URL: process.env.NEXT_PUBLIC_node_URL,
@@ -8,3 +8,4 @@ const nextConfig: NextConfig = {
 };
 
 export default nextConfig;
+

@@ -7,3 +7,5 @@ README.md
 .git
 dev
 _dev
+.env
+.env.local
