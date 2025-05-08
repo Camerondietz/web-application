@@ -3,7 +3,6 @@ FROM node:23.11.0-bullseye-slim
 RUN npm install -g npm@9.1.3
 
 ADD package.json .
-ADD .env .
 ADD server.js .
 ADD models/Product.js .
 COPY . .
