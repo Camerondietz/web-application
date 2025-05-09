@@ -32,7 +32,7 @@ function ProductsPage() {
   const [products, setProducts] = useState<Product[]>([]);
   const [loading, setLoading] = useState<boolean>(true);
   const [page, setPage] = useState<number>(1);
-  const [hasMore, setHasMore] = useState<boolean>(true);
+  const [hasMore, setHasMore] = useState<boolean>(false);
 
   // Get filters from URL
   const category = searchParams.get("category");
@@ -69,7 +69,7 @@ function ProductsPage() {
   useEffect(() => {
     setPage(1);
     fetchProducts(true); // Reset list when filters change
-  }, [category, keyword]);
+  }, [category, keyword, manufacturer]);
 
   // Load more products when scrolling
   const loadMore = () => {

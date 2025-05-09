@@ -28,12 +28,12 @@ const Footer = () => {
         {/* Socials or Contact */}
         <div>
           <h3 className="text-md font-semibold mb-2">Get in Touch</h3>
-          <p className="text-sm mb-1">Email: dietz.cameron@gmail.com</p>
+          <p className="text-sm mb-1">Email: inquiries@cameron-dietz.com</p>
           <p className="text-sm mb-1">Phone: +1 (512) 750-7411</p>
           <div className="flex space-x-4 mt-2">
             {/* Replace with actual icons if needed */}
-            <a href="#" aria-label="Instagram" className="hover:underline">Instagram</a>
-            <a href="#" aria-label="Twitter" className="hover:underline">Twitter</a>
+            <a href="https://www.linkedin.com/in/dietzcameron" title="Linkedin" target="_blank" aria-label="LinkedIn" className="hover:underline">LinkedIn</a>
+            <a href="https://cameron-dietz.com" title="Portfolio" target="_blank" aria-label="Portfolio" className="hover:underline">Portfolio</a>
           </div>
         </div>
 

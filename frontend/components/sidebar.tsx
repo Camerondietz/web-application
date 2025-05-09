@@ -33,9 +33,7 @@ export default function Sidebar() {
   // Fetch categories when sidebar opens or when parent changes
   useEffect(() => {
     if (showCategories && isOpen) {
-      if (currentParentId != null) {
         dispatch(fetchCategories(currentParentId));
-      }
     }
   }, [showCategories, isOpen, currentParentId, dispatch]);
 

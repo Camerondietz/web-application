@@ -65,7 +65,7 @@ export default function ResistorColorCodeCalculator() {
   };
 
   return (
-    <div className="bg-gray-100 dark:bg-gray-800 text-black shadow-lg rounded-lg p-6 mb-6">
+    <div className="bg-gray-100 dark:bg-gray-800 shadow-lg rounded-lg p-6 mb-6">
       <h2 className="text-xl font-bold mb-4">Resistor Color Code Calculator</h2>
       <div className="grid grid-cols-2 sm:grid-cols-4 gap-4 mb-4">
         {[["Band 1", band1, setBand1], ["Band 2", band2, setBand2]].map(

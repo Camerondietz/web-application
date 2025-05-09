@@ -1,10 +1,24 @@
 "use client";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 
-const imageList = Array.from({ length: 7 }, (_, i) => `${i + 1}`); // Example: ['1', '2', ..., '10']
+const imageList = Array.from({ length: 7 }, (_, i) => `${i + 1}`);
 
 export default function LearnPage() {
   const [selectedImage, setSelectedImage] = useState("1");
+  const [svgExists, setSvgExists] = useState(true);
+
+  useEffect(() => {
+    const checkSVG = async () => {
+      try {
+        const res = await fetch(`/learn/${selectedImage}.svg`, { method: "HEAD" });
+        setSvgExists(res.ok);
+      } catch (err) {
+        setSvgExists(false);
+      }
+    };
+
+    checkSVG();
+  }, [selectedImage]);
 
   return (
     <div className="flex flex-col md:flex-row h-screen overflow-hidden">
@@ -34,11 +48,13 @@ export default function LearnPage() {
             alt={`Page ${selectedImage}`}
             className="absolute top-0 left-0 w-full object-contain"
           />
-          <object
-            data={`/learn/${selectedImage}.svg`}
-            type="image/svg+xml"
-            className="absolute top-0 left-0 w-full pointer-events-none"
-          />
+          {svgExists && (
+            <object
+              data={`/learn/${selectedImage}.svg`}
+              type="image/svg+xml"
+              className="absolute top-0 left-0 w-full pointer-events-none"
+            />
+          )}
         </div>
       </div>
     </div>

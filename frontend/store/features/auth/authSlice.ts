@@ -99,7 +99,7 @@ export const loadUser = createAsyncThunk(
         },
       });
 
-      return { user: response.data };
+      return { user: response.data.username };
     } catch (error: any) {
       return rejectWithValue("Failed to load user");
     }
