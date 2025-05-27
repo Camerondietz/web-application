@@ -27,6 +27,7 @@ const Navbar = () => {
   const [mobileOpen, setMobileOpen] = useState<boolean>(false);
   const [searchOpen, setSearchOpen] = useState<boolean>(false);
   const [searchTerm, setSearchTerm] = useState<string>("");
+  const [hasMounted, setHasMounted] = useState(false);
 
   useEffect(() => {
     const handleResize = () => {
@@ -43,6 +44,10 @@ const Navbar = () => {
     dispatch(loadUser());
   }, [dispatch]);
 
+  useEffect(() => {
+    setHasMounted(true);
+  }, [])
+
   const handleLogout = () => {
     dispatch(logoutUser());
   };
@@ -53,6 +58,7 @@ const Navbar = () => {
       router.push(`/products?keyword=${encodeURIComponent(searchTerm)}`);
     }
   };
+  if (!hasMounted) return null;
 //max-w-screen-md limit stretch
   return (
     <header className="p-4 bg-gray-100 dark:bg-gray-800 text-gray-700 dark:text-gray-300 flex items-center justify-between relative">

@@ -165,6 +165,7 @@ def get_auth_details(request):
 #`logout_request` view to handle sign-out requests
 #@csrf_protect
 @api_view(['POST'])
+@permission_classes([IsAuthenticated])
 def logout_user(request):
     """User Logout API - Blacklists the refresh token"""
     try:

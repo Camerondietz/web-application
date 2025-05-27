@@ -4,6 +4,7 @@ from django.dispatch import receiver
 from .models import Product
 import os
 
+ATTRIBUTE_URL = os.getenv("ATTRIBUTE_SERVICE_URL", "http://localhost:4000")
 
 @receiver(post_save, sender=Product)
 def sync_product_attributes(sender, instance, **kwargs):
@@ -26,7 +27,7 @@ def sync_product_attributes(sender, instance, **kwargs):
         print("attempting to send part info",payload)
 
         response = requests.post(
-            url = (os.environ.get("ATTRIBUTE_SERVICE_URL", "http://localhost:3000").rstrip("/") + "/attributes"),
+            url = ("ATTRIBUTE_URL" + "/attributes"),
             json=payload,
             headers={"Authorization": f"Bearer {os.environ.get('ATTRIBUTE_SERVICE_TOKEN')}"}
         )

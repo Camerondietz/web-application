@@ -105,7 +105,7 @@ export default function ProductDetailPage() {
             {/* Add to Cart Button */}
             <button
               onClick={() => dispatch(addToCart({ id: product.id, name: product.name, price: product.price, image: product.image, quantity: qty }))}
-              className="bg-blue-600 hover:bg-blue-700 text-white px-6 py-2 rounded-lg transition"
+              className="bg-blue-600 hover:bg-blue-700 text-white px-6 py-2 rounded-lg transition focus:outline-2 focus:outline-offset-2 focus:outline-blue-700 active:bg-blue-700"
             >
               Add to Cart
             </button>

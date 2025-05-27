@@ -8,9 +8,7 @@ const config: Config = {
   ],
   darkMode: 'class',
   theme: {
-    extend: {
-      //backgroundColor: ['hover', 'dark'],
-    },
+    extend: {},
   },
   plugins: [],
 }
