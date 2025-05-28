@@ -43,13 +43,16 @@ urlpatterns = [
     path("account/change-password/", views.change_password, name="account-change-password"),
 
     path('create-checkout-session', views.create_checkout_session),
-    path('create-checkout-session/', views.create_checkout_session),
-    path('webhook', views.webhook),
-    path('webhook/', views.webhook),
-    path('create-payment-intent', views.create_payment_intent),
-    path('create-payment-intent/', views.create_payment_intent),
-    path('get-config', views.get_config),
-    path('get-config/', views.get_config),
+    #path('create-checkout-session/', views.create_checkout_session),
+    path('session-status', views.session_status),
+    #path('session-status/', views.create_checkout_session),
+
+    #path('webhook', views.webhook),
+    #path('webhook/', views.webhook),
+    #path('create-payment-intent', views.create_payment_intent),
+    #path('create-payment-intent/', views.create_payment_intent),
+    #path('get-config', views.get_config),
+    #path('get-config/', views.get_config),
 
 
 ]

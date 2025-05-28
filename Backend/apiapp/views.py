@@ -14,6 +14,7 @@ from django.contrib.auth.hashers import check_password, make_password
 from django.contrib.auth import authenticate
 from django.db.models import Q
 from django.conf import settings
+from decimal import Decimal
 import stripe
 
 #from django.views.decorators.csrf import csrf_protect
@@ -273,75 +274,51 @@ def change_password(request):
 
 #payment handeling
 stripe.api_key = settings.STRIPE_SECRET_KEY
+print(stripe.api_key)
 #stripe.api_version = '2025-03-31.basil'
+
 @api_view(['POST'])
 def create_checkout_session(request):
     try:
+        #Checking cart data
+        data = request.data
+        cart_items = data.get('cartItems', [])
+        price = 0
+        totalPrice = Decimal('0.00')
+        for item in cart_items:
+            print(item['id'])
+            product = get_object_or_404(Product, pk=item['id'])
+            print(product)
+            quantity = int(item['quantity'])
+            price = product.price * quantity  # product.price is a Decimal
+            print("part price:", price)
+            totalPrice += price
+            print("total price:", totalPrice)
+
+
         session = stripe.checkout.Session.create(
-          line_items=[
-            {
-              "price_data": {
-                "currency": "usd",
-                "product_data": {"name": "T-shirt"},
-                "unit_amount": 2000,
-              },
-              "quantity": 1,
-            },
-          ],
-          mode="payment",
-          ui_mode="custom",
-          # The URL of your payment completion page
-          return_url=settings.FRONTEND_URL + "/checkout/success?session_id={CHECKOUT_SESSION_ID}",
+            ui_mode = 'embedded',
+            line_items=[
+                {
+                "price_data": {
+                    "currency": "usd",
+                    "product_data": {"name": "One-time Payment"},
+                    "unit_amount": int(totalPrice * 100),
+                },
+                "quantity": 1,
+                },
+            ],
+            mode='payment',
+            return_url=settings.FRONTEND_URL + '/checkout/return?session_id={CHECKOUT_SESSION_ID}',
         )
-        return Response({
-            'clientSecret': session.client_secret
-        })
     except Exception as e:
-        return Response({"error": str(e)}, status=status.HTTP_400_BAD_REQUEST)
+        return Response({"error": str(e)}, status=500)
 
-@api_view(['POST'])
-def get_config(request):
-    return Response({'publishableKey': os.getenv('STRIPE_PUBLISHABLE_KEY')})
+    return Response({"clientSecret":session.client_secret})
 
-@api_view(['POST'])
-def webhook(request):
-    payload = request.body
-    sig_header = request.META.get('HTTP_STRIPE_SIGNATURE')
-    event = None
+@api_view(['GET'])
+def session_status(request):
+  sessionID = request.GET.get('session_id')
+  session = stripe.checkout.Session.retrieve(sessionID)
 
-    try:
-        event = stripe.Webhook.construct_event(
-            payload, sig_header
-        )
-    except ValueError as e:
-        # Invalid payload
-        return HttpResponse(status=400)
-    except stripe.error.SignatureVerificationError as e:
-        # Invalid signature
-        return HttpResponse(status=400)
-
-    # Handle the event
-    if event['type'] == 'checkout.session.completed':
-        session = event['data']['object']
-
-        # You can lookup user/order by session.client_reference_id or metadata
-        print("Payment successful for session:", session['id'])
-        # TODO: Mark order as paid in your database
-
-    return HttpResponse(status=200)
-
-@api_view(["POST"])
-def create_payment_intent(request):
-    #from stripe import PaymentIntent
-    try:
-        amount = 5000 #amount = request.data.get("amount")  # Validate this securely
-        #currency = request.data.get("currency", "usd")
-
-        intent = stripe.PaymentIntent.create(
-            amount=amount,
-            currency='usd', #currency,
-            automatic_payment_methods={"enabled": True},
-        )
-        return Response({"clientSecret": intent.client_secret})
-    except Exception as e:
-        return JsonResponse({'error': str(e)}, status=400)
+  return Response({"status": session.status, "customer_email":session.customer_details.email})

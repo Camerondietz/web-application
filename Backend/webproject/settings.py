@@ -28,8 +28,7 @@ SECRET_KEY = 'django-insecure-c-2=d+g(3l7qt+xlk4mk%ngsdxpjffs1u!5fz!r=k_nkynj_df
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ["http://api.cameron-dietz.com","api.cameron-dietz.com","localhost","https://api.cameron-dietz.com"]
-
+ALLOWED_HOSTS = ["http://api.cameron-dietz.com","api.cameron-dietz.com","localhost","http://127.0.0.1:8000","https://api.cameron-dietz.com"]
 
 # Application definition
 
@@ -62,6 +61,7 @@ MIDDLEWARE = [
 
 CORS_ALLOWED_ORIGINS = [
     "http://localhost:3000",  # Allow only your frontend
+    "http://127.0.0.1:3000", #DEV
     "http://ecommerce.cameron-dietz.com",
     "https://ecommerce.cameron-dietz.com",
 ]
@@ -74,7 +74,7 @@ CSRF_TRUSTED_ORIGINS = [
     "http://ecommerce.cameron-dietz.com",
     "http://service.cameron-dietz.com",  # if applicable
 ]
-
+#CORS_ORIGIN_ALLOW_ALL = True
 CORS_ALLOW_CREDENTIALS = True  # Allow cookies or authentication headers
 CORS_ALLOW_METHODS = ["GET", "POST", "PUT", "DELETE", "OPTIONS"]
 CORS_ALLOW_HEADERS = ["Authorization", "Content-Type", 'x-csrftoken']
