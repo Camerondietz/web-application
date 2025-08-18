@@ -108,12 +108,6 @@ export default function AccountPage() {
 
   return (
     <div className="container mx-auto px-4 py-10 max-w-lg">
-
-      <h2 className="text-3xl font-bold text-center mt-8 dark:text-white">Orders</h2>
-      <div className="mt-5 mb-5 text-center">
-        <Link href="/orders" className="bg-blue-500 my-auto m-3 text-center mt-3 mb-3 hover:bg-blue-600 text-white font-bold py-2 px-4 rounded-lg items-center w-full"
-        > See orders</Link>
-      </div>
       <h2 className="text-3xl font-bold text-center dark:text-white">Account Details</h2>
 
       {/* Account Info Update */}

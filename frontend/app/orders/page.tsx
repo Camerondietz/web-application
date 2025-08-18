@@ -18,7 +18,7 @@ export default function OrdersPage() {
   useEffect(() => {
     const fetchOrders = async () => {
       try {
-        const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/orders`, {
+        const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/account/orders`, {
           credentials: 'include', // use this if you require cookies (e.g., auth)
         });
 

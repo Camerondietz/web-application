@@ -25,5 +25,6 @@ urlpatterns = [
     path('',views.homepage),
     path('about/',views.about),
     path('api/',include('apiapp.urls')),
+    path('vendorapi/',include('vendorapi.urls')),
     
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

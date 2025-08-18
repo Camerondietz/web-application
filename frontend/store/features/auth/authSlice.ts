@@ -106,6 +106,49 @@ export const loadUser = createAsyncThunk(
   }
 );
 
+//Retrieve active token - need to implement
+
+export const getValidAccessToken = async (): Promise<string | null> => {
+  const accessToken = Cookies.get('accessToken') ?? null;
+  const refreshToken = Cookies.get('refreshToken') ?? null;
+
+  if (!accessToken && !refreshToken) return null;
+
+  try {
+    // Try using current access token for a test request to validate it
+    const res = await axios.get(`${API_URL}/api/auth/`, {
+      headers: {
+        Authorization: `Bearer ${accessToken}`,
+      },
+    });
+
+    // Token is valid
+    return accessToken;
+  } catch (err: any) {
+    // Token might be expired
+    if (err.response?.status === 401 && refreshToken) {
+      try {
+        const res = await axios.post(`${API_URL}/api/token/refresh/`, {
+          refresh: refreshToken,
+        });
+
+        const newAccessToken = res.data.access;
+        Cookies.set('accessToken', newAccessToken, { secure: true });
+        console.log("new token set");
+        return newAccessToken;
+      } catch (refreshError) {
+        console.error("Refresh token invalid or expired", refreshError);
+        Cookies.remove("accessToken");
+        Cookies.remove("refreshToken");
+        return null;
+      }
+    }
+
+    return null;
+  }
+};
+
+
 export const authSlice = createSlice({
   name: "auth",
   initialState,

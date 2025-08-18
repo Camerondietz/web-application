@@ -15,7 +15,7 @@ import uuid
 # Public-Facing Web Database
 # ===========================
 
-# User & Authentication
+# User & Authentication  - deprecated
 #class User(models.Model):
 #    first_name = models.CharField(max_length=100)
 #    last_name = models.CharField(max_length=100)
@@ -30,10 +30,12 @@ import uuid
 class Address(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE)
     street = models.CharField(max_length=255)
+    street2 = models.CharField(max_length=255, blank=True, null=True)
     city = models.CharField(max_length=100)
     state = models.CharField(max_length=50)
     zip_code = models.CharField(max_length=20)
     country = models.CharField(max_length=50)
+    name = models.CharField(max_length=50, null=True, blank=True)
     is_default = models.BooleanField(default=False)
 
 # Category Model
@@ -41,6 +43,7 @@ class Category(models.Model):
     name = models.CharField(max_length=255, unique=True)
     description = models.TextField(null=True, blank=True)
     parent_category = models.ForeignKey('self', null=True, blank=True, on_delete=models.CASCADE, related_name='subcategories')
+    is_visible = models.BinaryField(blank=True, null=True, default=False)
     def __str__(self):
         return self.name
     
@@ -65,6 +68,8 @@ class Product(models.Model):
     manufacturer = models.ForeignKey('Manufacturer', null=True, blank=True, on_delete=models.SET_NULL)
     suppliers = models.ManyToManyField('Supplier', through='ProductSupplier')
     created_at = models.DateTimeField(auto_now_add=True)
+    is_visible = models.BinaryField(blank=True, null=True, default=False)
+    is_auto = models.BinaryField(blank=True, null=True, default=False)
 
     def __str__(self):
         return self.name
@@ -80,11 +85,19 @@ class Order(models.Model):
         ('Cancelled', 'Cancelled'),
     ]
     user = models.ForeignKey(User, on_delete=models.SET_NULL, null=True, blank=True)
+    stripe_session_id = models.CharField(max_length=255, null=True, blank=True)
     email = models.CharField(max_length=50, null=True)
     status = models.CharField(max_length=50, choices=STATUS_CHOICES, default='Pending')
     total_price = models.DecimalField(max_digits=10, decimal_places=2)
     created_at = models.DateTimeField(auto_now_add=True)
-
+    # Snapshotted address fields
+    shipping_street = models.CharField(max_length=255, blank=True, null=True)
+    shipping_street2 = models.CharField(max_length=255, blank=True, null=True)
+    shipping_city = models.CharField(max_length=100, blank=True, null=True)
+    shipping_state = models.CharField(max_length=50, blank=True, null=True)
+    shipping_zip_code = models.CharField(max_length=20, blank=True, null=True)
+    shipping_country = models.CharField(max_length=50, blank=True, null=True)
+    
 class OrderItem(models.Model):
     order = models.ForeignKey(Order, on_delete=models.CASCADE)
     product = models.ForeignKey(Product, on_delete=models.SET_NULL, null=True, blank=True)
@@ -134,3 +147,101 @@ class ProductSupplier(models.Model):
 
     def __str__(self):
         return f"{self.product.name} from {self.supplier.name}"
+
+# -----------------------
+# ETIM Core Tables
+# -----------------------
+
+class EtimGroup(models.Model):
+    code = models.CharField(max_length=20, primary_key=True)
+    name = models.CharField(max_length=255)
+
+    def __str__(self):
+        return f"{self.code} - {self.name}"
+
+
+class EtimClass(models.Model):
+    code = models.CharField(max_length=80, primary_key=True)  # e.g., EC000000
+    name = models.CharField(max_length=255)
+    group = models.ForeignKey(EtimGroup, on_delete=models.CASCADE, related_name='classes')
+    version = models.CharField(max_length=80, null=True, blank=True)
+    version_date = models.CharField(max_length=80, null=True, blank=True)
+
+    def __str__(self):
+        return f"{self.code} - {self.name}"
+
+
+class EtimFeature(models.Model):
+    code = models.CharField(max_length=80, primary_key=True)  # e.g., EF000001
+    name = models.CharField(max_length=255)
+    group = models.ForeignKey('EtimFeatureGroup', null=True, blank=True, on_delete=models.SET_NULL)
+
+    def __str__(self):
+        return f"{self.code} - {self.name}"
+
+
+class EtimFeatureGroup(models.Model):
+    code = models.CharField(max_length=80, primary_key=True)
+    name = models.CharField(max_length=255)
+
+    def __str__(self):
+        return f"{self.code} - {self.name}"
+
+
+class EtimUnit(models.Model):
+    code = models.CharField(max_length=80, primary_key=True)
+    symbol = models.CharField(max_length=80)
+
+    def __str__(self):
+        return self.name
+
+
+class EtimValue(models.Model):
+    code = models.CharField(max_length=80, primary_key=True)
+    value = models.CharField(max_length=255)
+
+    def __str__(self):
+        return self.value
+
+
+# -----------------------
+# Mapping Tables
+# -----------------------
+
+class EtimClassFeatureMap(models.Model):
+    artclassfeaturenr = models.BigIntegerField(primary_key=True)
+    etim_class = models.ForeignKey('EtimClass', on_delete=models.CASCADE)
+    feature = models.ForeignKey('EtimFeature', on_delete=models.CASCADE)
+    
+    FEATURE_TYPE_CHOICES = [
+        ('A', 'Alphanumeric'),
+        ('N', 'Numeric'),
+        ('F', 'Float'),
+        ('B', 'Boolean'),
+        ('E', 'Enumeration'),  # Add others based on ETIM spec if needed
+    ]
+    feature_type = models.CharField(max_length=15, choices=FEATURE_TYPE_CHOICES)
+    
+    unit = models.ForeignKey('EtimUnit', null=True, blank=True, on_delete=models.SET_NULL)
+    sort_number = models.PositiveIntegerField(null=True, blank=True)
+
+    class Meta:
+        unique_together = ('etim_class', 'feature')
+
+
+class EtimClassFeatureValueMap(models.Model):
+    artclassfeaturevaluenr = models.BigIntegerField(primary_key=True)
+    feature_map = models.ForeignKey('EtimClassFeatureMap', on_delete=models.CASCADE, related_name='value_maps')
+    value = models.ForeignKey('EtimValue', on_delete=models.CASCADE)
+    sort_number = models.PositiveIntegerField(null=True, blank=True)
+
+    class Meta:
+        unique_together = ('feature_map', 'value')
+
+
+class EtimClassSynonym(models.Model):
+    etim_class = models.ForeignKey(EtimClass, on_delete=models.CASCADE)
+    synonym = models.CharField(max_length=255)
+
+    def __str__(self):
+        return self.synonym

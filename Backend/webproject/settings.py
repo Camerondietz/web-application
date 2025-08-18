@@ -24,11 +24,11 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 
 # SECURITY WARNING: keep the secret key used in production secret!
 SECRET_KEY = 'django-insecure-c-2=d+g(3l7qt+xlk4mk%ngsdxpjffs1u!5fz!r=k_nkynj_df'
-
+STRIPE_WEBHOOK_SECRET = 'whsec_e1af1a8ac33a7581d0650d755daf987e829ea1b8c00fd1b64809b8873d188c08'
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ["http://api.cameron-dietz.com","api.cameron-dietz.com","localhost","http://127.0.0.1:8000","https://api.cameron-dietz.com"]
+ALLOWED_HOSTS = ["127.0.0.1","http://api.cameron-dietz.com","api.cameron-dietz.com","localhost","http://127.0.0.1:8000","https://api.cameron-dietz.com"]
 
 # Application definition
 
@@ -40,9 +40,11 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'apiapp',
+    'vendorapi',
     'rest_framework',
     'rest_framework_simplejwt',
     'corsheaders',
+    'import_export',
     'rest_framework_simplejwt.token_blacklist',
 
 ]
@@ -182,5 +184,16 @@ MEDIA_ROOT = BASE_DIR / "media"
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 STRIPE_SECRET_KEY = os.getenv("STRIPE_SECRET_KEY")
+STRIPE_SIGNED_KEY = os.getenv("STRIPE_SIGNED_KEY")
 FRONTEND_URL = os.getenv("FRONTEND_URL", "http://localhost:3000")
 
+#VENDORAPI
+DIGIKEY_CLIENT_ID = os.getenv('DIGIKEY_CLIENT_ID')
+DIGIKEY_CLIENT_SECRET = os.getenv('DIGIKEY_CLIENT_SECRET')
+DIGIKEY_AUTH_URL = 'https://api.digikey.com/v1/oauth2/token'
+DIGIKEY_PRODUCT_URL = 'https://api.digikey.com/products/v4/search/{digikey_part_number}/productdetails'
+
+#ERP
+ERPNEXT_BASE_URL = "http://localhost:8080"
+ERPNEXT_API_KEY = os.environ.get("ERPNEXT_API_KEY")
+ERPNEXT_API_SECRET = os.environ.get("ERPNEXT_API_SECRET")

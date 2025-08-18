@@ -73,7 +73,7 @@ const Navbar = () => {
 
       {/* Logo / Home Link */}
       <Link href="/">
-        <h1 className="text-xl font-bold">Home</h1>
+        <h1 className="text-xl font-bold italic font">AVENTREK</h1>
       </Link>
 
       {/* Desktop Search Bar */}

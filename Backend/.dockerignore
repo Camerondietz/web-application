@@ -6,3 +6,5 @@ env/
 # Ignore git and other version control directories
 .git/
 .gitignore
+
+start.bat

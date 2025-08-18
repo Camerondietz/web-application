@@ -4,19 +4,32 @@ import { useDispatch, useSelector } from "react-redux";
 //import { LoginSuccess } from "../../store/features/auth/authSlice";
 import { loginUser } from "../../store/features/auth/authSlice";
 import type { RootState, AppDispatch } from "../../store/store";
-import { useState } from "react";
+import { useState, useEffect } from "react";
+import { useRouter } from "next/navigation"; 
 
 const Login = () => {
     const [username, setUsername] = useState("");
     const [password, setPassword] = useState("");
     const dispatch = useDispatch<AppDispatch>();
     const { loading, error, isAuthenticated } = useSelector((state: RootState) => state.auth);
+    const router = useRouter();
   
     const handleSubmit = (e: React.FormEvent) => {
       e.preventDefault();
       dispatch(loginUser({ username, password }));
     };
-  
+   
+    // Redirect after login
+    useEffect(() => {
+      if (isAuthenticated) {
+        const timeout = setTimeout(() => {
+          router.push("/"); // Redirect to homepage
+        }, 3000); // 3 seconds
+
+        return () => clearTimeout(timeout); // Clean up timeout on component unmount
+      }
+    }, [isAuthenticated, router]);
+
     return (
       <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-gray-100 to-gray-200 dark:from-gray-900 dark:to-gray-800">
         <div className="bg-white dark:bg-gray-900 p-8 rounded-2xl shadow-lg w-full max-w-md">
