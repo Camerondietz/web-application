@@ -22,9 +22,6 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/5.1/howto/deployment/checklist/
 
-# SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = 'django-insecure-c-2=d+g(3l7qt+xlk4mk%ngsdxpjffs1u!5fz!r=k_nkynj_df'
-STRIPE_WEBHOOK_SECRET = 'whsec_e1af1a8ac33a7581d0650d755daf987e829ea1b8c00fd1b64809b8873d188c08'
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
@@ -180,6 +177,8 @@ MEDIA_ROOT = BASE_DIR / "media"
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/5.1/ref/settings/#default-auto-field
+
+SECRET_KEY =  os.getenv("SECRET_KEY")
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 

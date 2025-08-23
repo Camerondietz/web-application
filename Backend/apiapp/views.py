@@ -402,6 +402,16 @@ stripe.api_key = settings.STRIPE_SECRET_KEY
 print(stripe.api_key)
 #stripe.api_version = '2025-03-31.basil'
 
+@api_view(['POST'])
+@permission_classes([IsAuthenticated])
+def submit_address(request):
+    data = json.loads(request.body)
+    address = data.get("address")
+    request.session["ship_address"] = address
+    #shipping_rates = get_ups_shipping_rates(address, cart_info["weight_kg"])
+    #request.session["shipping_rates"] = shipping_rates
+    #return JsonResponse({"rates": shipping_rates})
+    return Response(status=status.HTTP_204_NO_CONTENT)
 
 @api_view(['POST'])
 @permission_classes([IsAuthenticated])
@@ -469,6 +479,10 @@ def create_checkout_session(request):
             ui_mode = 'custom',
             line_items=line_items,
             mode='payment',
+            billing_address_collection='auto',
+            shipping_address_collection={
+              'allowed_countries': ['US'],
+            },
             metadata={
                 "user_id": str(user.id),
             },

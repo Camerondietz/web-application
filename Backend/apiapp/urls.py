@@ -62,6 +62,7 @@ urlpatterns = [
     path('account/orders/<int:pk>/', views.get_order_details, name='get_account_order'),
 
     ### STRIPE ###
+    path('submit-address', views.submit_address),
     path('create-checkout-session', views.create_checkout_session),
     #path('create-checkout-session/', views.create_checkout_session),
     path('session-status', views.session_status),
