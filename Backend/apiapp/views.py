@@ -16,6 +16,7 @@ from django.db.models import Q
 from django.conf import settings
 from django.views.decorators.csrf import csrf_exempt
 from decimal import Decimal
+import traceback
 import stripe
 import json
 #from django.views.decorators.csrf import csrf_protect
@@ -154,6 +155,30 @@ def login_user(request):
         }, status=status.HTTP_200_OK)
     else:
         return Response({"error": "Invalid credentials"}, status=status.HTTP_401_UNAUTHORIZED)
+    
+@api_view(['POST'])
+def refresh_token(request):
+    """Token Refresh API"""
+    refresh_token = request.data.get("refresh")
+
+    if not refresh_token:
+        return Response({"error": "Refresh token required"}, status=status.HTTP_400_BAD_REQUEST)
+
+    try:
+        # Validate the refresh token
+        refresh = RefreshToken(refresh_token)
+
+        # Generate a new access token
+        access_token = str(refresh.access_token)
+
+        return Response({
+            "access": access_token,
+            "refresh": refresh_token,  # Optionally return the same refresh token
+        }, status=status.HTTP_200_OK)
+
+    except Exception as e:
+        print(f"Error occurred while refreshing token: {str(e)}")
+        return Response({"error": "Invalid or expired refresh token"}, status=status.HTTP_400_BAD_REQUEST)
 
 @api_view(['GET'])
 @permission_classes([IsAuthenticated])
@@ -378,21 +403,65 @@ def set_default_address(request, pk):
 @permission_classes([IsAuthenticated])
 def get_account_orders(request):
     """Retrieve ERPNext orders for the authenticated user."""
+    print(request.user)
+    user = request.user
     try:
-        orders = get_orders_for_user(request.user)
+        orders = get_orders_for_user(user)
         return Response(orders, status=200)
     except Exception as e:
         return Response({"error": str(e)}, status=500)
     
-def get_order_details(request, order_name):
+@api_view(['GET'])
+@permission_classes([IsAuthenticated]) 
+def get_order_details_view(request, order_name):
     """Retrieve details and line items for a specific order from ERPNext."""
+    print(order_name)
     try:
         order = get_order_details(order_name)
         
         if not order:
             return Response({"error": "Order not found"}, status=404)
         
-        return Response(order, status=200)
+                # Extracting general order information
+        order_data = {
+            "order_name": order.get("name"),
+            "creation": order.get("creation"),
+            "transaction_date": order.get("transaction_date"),
+            "delivery_date": order.get("delivery_date"),
+            "currency": order.get("currency"),
+            "grand_total": order.get("grand_total"),
+            "taxes_and_charges": order.get("taxes_and_charges"),
+            "status": order.get("status"),
+            "delivery_status": order.get("delivery_status"),
+            "customer": order.get("customer"),
+            #"customer_address": order.get("customer_address"),
+            #"contact_email": order.get("contact_email"),
+            "total_net_weight": order.get("total_net_weight"),
+            "base_total": order.get("base_total"),
+            "total_taxes_and_charges": order.get("total_taxes_and_charges"),
+        }
+
+        # Extracting line items (order items)
+        items_data = []
+        items = order.get("items", [])
+        for item in items:
+            item_details = {
+                "item_name": item.get("item_name"),
+                "item_code": item.get("item_code"),
+                "qty": item.get("qty"),
+                "rate": item.get("rate"),
+                "amount": item.get("amount"),
+            }
+            items_data.append(item_details)
+
+        # Combine all the data into the final response
+        response_data = {
+            "order_details": order_data,
+            "items": items_data,
+        }
+
+        return Response(response_data, status=200)
+
     except Exception as e:
         return Response({"error": str(e)}, status=500)
 #------------------------------
@@ -502,9 +571,9 @@ def create_checkout_session(request):
 def session_status(request):
   sessionID = request.GET.get('session_id')
   session = stripe.checkout.Session.retrieve(sessionID)
-
-  return Response({"status": session.status, "customer_email":session.customer_details.email})
-
+  return Response(session)
+  #return Response({"status": session.status, "customer_email":session.customer_details.email})
+  #return jsonify(status=session.status, payment_status=session.payment_status, payment_intent_id=session.payment_intent.id, payment_intent_status=session.payment_intent.status)
 @csrf_exempt
 def stripe_webhook(request):
     payload = request.body
@@ -543,7 +612,14 @@ def stripe_webhook(request):
             else:
                 order_status = "Pending"
 
-            shipping = session.get('collected_information', {}).get('shipping_details', {}).get('address', {})
+            collected = session.get('collected_information') or {}
+            shipping_details = collected.get('shipping_details') or {}
+            shipping = shipping_details.get('address') or {}
+
+            # Fallback to customer_details.address if empty
+            if not shipping:
+                shipping = session.get("customer_details", {}).get("address", {}) or {}
+
             ship_addr = ShipAddress(
                 line1=shipping.get('line1', ''),
                 line2=shipping.get('line2', ''),
@@ -552,12 +628,12 @@ def stripe_webhook(request):
                 postal_code=shipping.get('postal_code', ''),
                 country=shipping.get('country', ''),
             )
-            order_shipping_street = shipping['line1']
-            order_shipping_street2 = shipping['line2']
-            order_shipping_city = shipping['city']
-            order_shipping_state = shipping['state']
-            order_shipping_zip = shipping['postal_code']
-            order_shipping_country = shipping['country']
+            order_shipping_street = shipping.get('line1', '')
+            order_shipping_street2 = shipping.get('line2', '')
+            order_shipping_city = shipping.get('city', '')
+            order_shipping_state = shipping.get('state', '')
+            order_shipping_zip = shipping.get('postal_code', '')
+            order_shipping_country = shipping.get('country', '')
             try:
                 result = process_checkout_session(
                     session=session,
@@ -566,9 +642,9 @@ def stripe_webhook(request):
                     full_name=session.get('customer_details', {}).get('name'),
                     currency=(session.get('currency') or 'usd').upper(),
                 )
-                print('ERPNext sync result: %s', result)
+                print('ERPNext sync result:', result)
             except Exception as e:
-                print('Webhook processing failed: %s', e)
+                print('Webhook processing failed:', e)
             try:
                 #existing order
                 order = Order.objects.get(stripe_session_id=session_id)
@@ -598,7 +674,7 @@ def stripe_webhook(request):
                     quantity = item.get('quantity', 1)
                     amount_total = Decimal(item.get('amount_total', 0)) / 100
 
-                    product = Product.objects.filter(pk=product_id).first()
+                    product = Product.objects.filter(name=product_id).first()
 
                     OrderItem.objects.create(
                         order=order,
@@ -610,6 +686,7 @@ def stripe_webhook(request):
 
         except Exception as e:
             print(f"Webhook error: {e}")
+            traceback.print_exc()
             return HttpResponse(status=500)
 
     return HttpResponse(status=200)

@@ -1,42 +1,46 @@
 'use client';
-
 import Link from 'next/link';
 import { useEffect, useState } from 'react';
+import axiosInstance from '@/services/axiosInstance'; // Make sure to import your axios instance
+import { useRouter } from "next/navigation";
+import axios from 'axios';
 
 type Order = {
-  id: number;
-  order_number: string;
-  total: number;
-  created_at: string;
+  name: string;
+  transaction_date: string;
+  grand_total: number;
   status: string;
 };
 
 export default function OrdersPage() {
   const [orders, setOrders] = useState<Order[]>([]);
   const [loading, setLoading] = useState(true);
+  const router = useRouter();
 
   useEffect(() => {
     const fetchOrders = async () => {
+    
       try {
-        const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/account/orders`, {
-          credentials: 'include', // use this if you require cookies (e.g., auth)
-        });
-
-        if (!res.ok) {
-          throw new Error('Failed to fetch orders');
+        const res = await axiosInstance.get('/api/account/orders');
+        
+        // Axios automatically parses JSON, so no need for .json() here
+        setOrders(res.data);  // Axios returns response data directly
+        console.log(orders);
+      } catch (error: any) {
+        if (error.response?.status === 401) {
+          // If token is expired, redirect to login page
+          router.push('/login');
+          console.error('Failed to fetch orders', error);
+        } else {
+          console.error('Failed to fetch orders', error);
         }
-
-        const data = await res.json();
-        setOrders(data);
-      } catch (error) {
-        console.error(error);
       } finally {
         setLoading(false);
       }
     };
 
     fetchOrders();
-  }, []);
+  }, [router]);
 
   return (
     <div className="max-w-4xl mx-auto px-4 py-8">
@@ -50,17 +54,17 @@ export default function OrdersPage() {
         <div className="space-y-4">
           {orders.map((order) => (
             <Link
-              key={order.id}
-              href={`/orders/${order.id}`}
+              key={order.name}
+              href={`/orders/${order.name}`}
               className="block border border-gray-300 dark:border-gray-700 rounded-lg p-4 hover:bg-gray-100 dark:hover:bg-gray-800 transition"
             >
               <div className="flex justify-between items-center">
                 <div>
-                  <p className="text-lg font-semibold">Order #{order.order_number}</p>
-                  <p className="text-sm text-gray-500">Placed on {new Date(order.created_at).toLocaleDateString()}</p>
+                  <p className="text-lg font-semibold">Order #{order.name}</p>
+                  <p className="text-sm text-gray-500">Placed on {new Date(order.transaction_date).toLocaleDateString()}</p>
                 </div>
                 <div className="text-right">
-                  <p className="font-bold text-blue-600">${order.total.toFixed(2)}</p>
+                  <p className="font-bold text-blue-600">${order.grand_total.toFixed(2)}</p>
                   <p className="text-sm text-gray-500">{order.status}</p>
                 </div>
               </div>

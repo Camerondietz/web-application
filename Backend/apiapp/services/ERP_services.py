@@ -35,6 +35,8 @@ import time
 from dataclasses import dataclass
 from decimal import Decimal
 from typing import Any, Dict, List, Optional, Tuple
+from datetime import datetime, timedelta
+import traceback
 
 import requests
 from django.conf import settings
@@ -173,6 +175,7 @@ class ERPNextClient:
         items = data.get("data") or data.get("message") or []
         if items:
             return items[0]["name"]
+        print("customer found by email")
         return None
 
     def create_customer(self, email: str, full_name: str, Shipaddress: ShipAddress) -> str:
@@ -203,6 +206,7 @@ class ERPNextClient:
             self._request("POST", "/api/resource/Address", json_body=addr_payload)
         except ERPError as e:
             logger.warning("Address creation failed for customer %s: %s", customer_name, e)
+        print("customer Created in ERP")
         return customer_name
     
     
@@ -242,6 +246,7 @@ class ERPNextClient:
         name = (created.get("data") or created.get("message") or {}).get("name")
         if not name:
             raise ERPError("Item creation returned no name")
+        print("Item created in ERP")
         return name
 
     def upsert_item(
@@ -276,34 +281,40 @@ class ERPNextClient:
         Uses `po_no` to store `stripe_session_id` for idempotency.
         """
         # Prevent duplicates: look for existing SO by po_no (map to stripe session)
-        if stripe_session_id:
-            params = {
-                "fields": json.dumps(["name", "po_no"]),
-                "filters": json.dumps([["Sales Order", "po_no", "=", stripe_session_id]]),
-                "limit": 1,
+        try:
+            if stripe_session_id:
+                params = {
+                    "fields": json.dumps(["name", "po_no"]),
+                    "filters": json.dumps([["Sales Order", "po_no", "=", stripe_session_id]]),
+                    "limit": 1,
+                }
+                existing = self._request("GET", "/api/resource/Sales Order", params=params)
+                rows = existing.get("data") or existing.get("message") or []
+                if rows:
+                    return rows[0]["name"]
+
+            erp_items = [
+                {"item_code": code, "qty": int(qty), "rate": float(rate)}
+                for code, qty, rate in items
+            ]
+            payload: Dict[str, Any] = {
+                "customer": customer_name,
+                "currency": currency,
+                "po_no": stripe_session_id,
+                "items": erp_items,
             }
-            existing = self._request("GET", "/api/resource/Sales Order", params=params)
-            rows = existing.get("data") or existing.get("message") or []
-            if rows:
-                return rows[0]["name"]
 
-        erp_items = [
-            {"item_code": code, "qty": int(qty), "rate": float(rate)}
-            for code, qty, rate in items
-        ]
-        payload: Dict[str, Any] = {
-            "customer": customer_name,
-            "currency": currency,
-            "po_no": stripe_session_id,
-            "items": erp_items,
-        }
-        if delivery_date:
-            payload["delivery_date"] = delivery_date
-
-        # Optionally set shipping address name if one exists; otherwise ERPNext will pick default
-        # (Advanced: you can create a dedicated Address and set shipping_address_name / shipping_address)
-        created = self._request("POST", "/api/resource/Sales Order", json_body=payload)
-        name = (created.get("data") or created.get("message") or {}).get("name")
+            # Determine delivery date
+            payload["delivery_date"] = delivery_date or (datetime.now() + timedelta(days=1)).date().isoformat()
+            print("Payload:", json.dumps(payload, indent=2))
+            # Optionally set shipping address name if one exists; otherwise ERPNext will pick default
+            # (Advanced: you can create a dedicated Address and set shipping_address_name / shipping_address)
+            created = self._request("POST", "/api/resource/Sales Order", json_body=payload)
+            name = (created.get("data") or created.get("message") or {}).get("name")
+        except Exception as e:
+            print("Error during Sales Order creation:", e)
+            traceback.print_exc()
+            raise
         if not name:
             raise ERPError("Sales Order creation returned no name")
         return name
@@ -330,6 +341,7 @@ class ERPNextClient:
                 total += Decimal(str(r.get("actual_qty") or 0))
             except Exception:
                 continue
+        print("Order created in ERP")
         return total
     
 
@@ -367,43 +379,65 @@ def process_checkout_session(
         return {"status": "duplicate_suppressed"}
 
     client = ERPNextClient()
+    try:
+        with transaction.atomic():
+            # 1) Customer
+            customer_name = client.upsert_customer(
+                email=email,
+                full_name=full_name or email.split("@")[0],
+                Shipaddress=shipping,
+            )
+            print("Customer upserted:", customer_name)
 
-    with transaction.atomic():
-        # 1) Customer
-        customer_name = client.upsert_customer(
-            email=email,
-            full_name=full_name or email.split("@")[0],
-            Shipaddress=shipping,
-        )
+            # 2) Items -> build list for Sales Order
+            so_items: List[Tuple[str, int, Decimal]] = []
+            for item in cart_items:
+                # Prefer SKU if present; fallback to the internal product ID
+                item_code = (item.get("sku") or str(item.get("id"))).strip()
+                item_name = item.get("description") or item_code
+                qty = int(item.get("quantity") or 1)
 
-        # 2) Items -> build list for Sales Order
-        so_items: List[Tuple[str, int, Decimal]] = []
-        for item in cart_items:
-            # Prefer SKU if present; fallback to the internal product ID
-            item_code = (item.get("sku") or str(item.get("id"))).strip()
-            item_name = item.get("name") or item_code
-            qty = int(item.get("quantity") or 1)
-            rate = Decimal(str(item.get("price") or "0"))
+                # Access the price object and get the price amount in cents
+                price = item.get("price", {})
+                unit_amount = price.get("unit_amount") or 0
+                rate = Decimal(str(unit_amount)) / 100  # Convert cents to dollars if needed
 
-            client.upsert_item(item_code=item_code, item_name=item_name, standard_rate=rate)
-            so_items.append((item_code, qty, rate))
+                # Handle invalid or missing price values
+                if rate <= 0:
+                    logger.error(f"Invalid price value for item {item_code}: {price}")
+                    rate = Decimal("0")  # fallback value if the price is missing or invalid
 
-        # 3) Create Sales Order (idempotent by po_no)
-        so_name = client.create_sales_order(
-            customer_name=customer_name,
-            items=so_items,
-            stripe_session_id=session_id,
-            shipping_address=shipping,
-            currency=currency,
-        )
+                # Continue with item processing
+                client.upsert_item(item_code=item_code, item_name=item_name, standard_rate=rate)
+                so_items.append((item_code, qty, rate))
 
+            # 3) Create Sales Order (idempotent by po_no)
+            so_name = client.create_sales_order(
+                customer_name=customer_name,
+                items=so_items,
+                stripe_session_id=session_id,
+                shipping_address=shipping,
+                currency=currency,
+            )
+        print("Sales Order created:", so_name)
+    except Exception as e:
+        print("Exception during checkout sync:", e)
+        traceback.print_exc()
+        raise
     return {"status": "created", "sales_order": so_name, "customer": customer_name}
 
-def get_orders_for_user(self, user) -> list[dict]:
-    customer_name = self.find_customer_by_email(user.email)
+def get_orders_for_user(user) -> list[dict]:
+    # Create an instance of ERPNextClient
+    client = ERPNextClient()
+
+    customer_name = client.find_customer_by_email(user.email)
+    #customer_name = "cameron dietz"
+    
     if not customer_name:
+        print("no user email")
         raise ERPError(f"No ERPNext customer found for {user.email}")
     
+    print("name found",customer_name)
     """Return a list of Sales Orders for the given ERPNext Customer.name."""
     params = {
         "fields": json.dumps([
@@ -413,17 +447,22 @@ def get_orders_for_user(self, user) -> list[dict]:
             "grand_total",
             "status"
         ]),
-        "filters": json.dumps([["Sales Order", "customer", "=", customer_name]]),
+        #"filters": '{"customer": "cameron dietz"}',
+        "filters": json.dumps({"customer": customer_name}),  # 👈 JSON string here
         "order_by": "transaction_date desc",
     }
-    data = self._request("GET", "/api/resource/Sales Order", params=params)
+    print(params)
+    data = client._request("GET", "/api/resource/Sales Order", params=params)
     return data.get("data") or data.get("message") or []
 
-def get_order_details(self, order_name: str) -> dict:
+def get_order_details(order_name) -> dict:
     """
     Fetch full details of a Sales Order from ERPNext, including line items.
     order_name = e.g. "SO-0001"
     """
+    print(f"Fetching details for order: {order_name}")
+    client = ERPNextClient()
+    
     fields = [
         "name",
         "transaction_date",
@@ -436,10 +475,21 @@ def get_order_details(self, order_name: str) -> dict:
         "items.rate",
         "items.amount"
     ]
-    
     params = {
         "fields": json.dumps(fields)
     }
+    print(f"Request parameters: {params}")
     
-    data = self._request("GET", f"/api/resource/Sales Order/{order_name}", params=params)
-    return data.get("data") or data.get("message") or {}
+    try:
+        # Request to fetch order details
+        data = client._request("GET", f"/api/resource/Sales Order/{order_name}", params=params)
+        print(f"Response data: {data}")  # Add this to see what response is returned
+        
+        return data.get("data") or data.get("message") or {}
+    
+    except ERPError as e:
+        print(f"Error fetching order details: {e}")
+        return {"error": f"Failed to fetch order details: {str(e)}"}
+    except Exception as e:
+        print(f"Unexpected error: {e}")
+        return {"error": f"Unexpected error: {str(e)}"}

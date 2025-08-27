@@ -23,7 +23,11 @@ const Login = () => {
     useEffect(() => {
       if (isAuthenticated) {
         const timeout = setTimeout(() => {
-          router.push("/"); // Redirect to homepage
+          // If the login is successful, go back to the previous page
+          if (typeof window !== 'undefined') {
+            window.history.back(); // Go to the previous page in history
+          }
+          router.push("/");
         }, 3000); // 3 seconds
 
         return () => clearTimeout(timeout); // Clean up timeout on component unmount

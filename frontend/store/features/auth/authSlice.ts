@@ -69,7 +69,7 @@ export const registerUser = createAsyncThunk(
   "auth/registerUser",
   async ({ username, email, password }: { username: string; email: string; password: string }, { rejectWithValue }) => {
     try {
-      const response = await axios.post(`${API_URL}/register/`, { username, email, password });
+      const response = await axios.post(`${API_URL}/api/register/`, { username, email, password });
 
       // Store tokens in cookies
       Cookies.set("accessToken", response.data.access, { secure: true });

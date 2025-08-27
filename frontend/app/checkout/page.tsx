@@ -28,7 +28,12 @@ export default function Checkout() {
   }));
 
   const [clientSecret, setClientSecret] = useState<string | null>(null);
+  const [shipping_amount, setshipping_amount] = useState<number | null>(null);
 
+  useEffect(() => {
+    setshipping_amount(0);
+  }, []);
+ 
   const fetchClientSecret = useCallback(async () => {
     try {
       const token = Cookies.get("accessToken");
@@ -92,9 +97,15 @@ return (
                 </li>
               ))}
               <li className="pt-4 flex justify-between font-semibold">
-                <span>Total</span>
+                <span>Subtotal</span>
                 <span>
                   ${cartItems.reduce((total, item) => total + (item.price) * item.quantity, 0).toFixed(2)}
+                </span>
+              </li>
+              <li className="pt-4 flex justify-between font-semibold">
+                <span>Shipping</span>
+                <span>
+                  ${shipping_amount ?? ''}
                 </span>
               </li>
             </ul>

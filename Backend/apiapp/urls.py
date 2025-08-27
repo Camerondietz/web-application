@@ -30,8 +30,9 @@ urlpatterns = [
     ### AUTH ###
     # Path for registration
     path('register/', views.register_user, name='register'),
-    path('token/', TokenObtainPairView.as_view(), name='token_obtain_pair'),
-    path('token/refresh/', TokenRefreshView.as_view(), name='token_refresh'),
+    #path('token/', TokenObtainPairView.as_view(), name='token_obtain_pair'),
+    #path('token/refresh/', TokenRefreshView.as_view(), name='token_refresh'),
+    path('token/refresh/', views.refresh_token, name='token_refresh'),
     path('auth/', views.get_auth_details),
     # Path for login
     path('login/', views.login_user, name='login'),
@@ -59,7 +60,7 @@ urlpatterns = [
     # List all orders for authenticated user
     path('account/orders/', views.get_account_orders, name='get_account_orders'),
     # List Order details for authenticated user
-    path('account/orders/<int:pk>/', views.get_order_details, name='get_account_order'),
+    path('account/order/<str:order_name>/', views.get_order_details_view, name='get_account_order'),
 
     ### STRIPE ###
     path('submit-address', views.submit_address),
