@@ -2,7 +2,7 @@ import os
 from django.http import HttpResponse,JsonResponse
 from django.shortcuts import render, get_object_or_404
 from django.core.paginator import Paginator
-from .models import Category, Product, Manufacturer, Order, OrderItem, Address
+from .models import Category, Product, Manufacturer, Order, OrderItem, Address, HomepageConfig
 from .serializers import CategorySerializer, ProductSerializer, AddressSerializer
 from rest_framework.decorators import api_view, permission_classes
 from rest_framework.permissions import IsAuthenticated
@@ -19,11 +19,61 @@ from decimal import Decimal
 import traceback
 import stripe
 import json
+from django.contrib.auth.tokens import default_token_generator
+from django.utils.http import urlsafe_base64_encode, urlsafe_base64_decode
+from django.utils.encoding import force_bytes
+from django.core.mail import send_mail
+from django.template.loader import render_to_string
+
 #from django.views.decorators.csrf import csrf_protect
 from .services.ERP_services import process_checkout_session, ShipAddress, get_orders_for_user, get_order_details
 
-def home(request):
-     return HttpResponse("Hello")
+@api_view(['GET'])
+def homepage_featured(request):
+    config = HomepageConfig.objects.first()  # Assuming there's only one config instance
+    if not config:
+        return JsonResponse({
+            'categories': [],
+            'products': [],
+            'manufacturers': []
+        })
+
+    # Fetch featured categories (only visible ones)
+    categories = Category.objects.filter(id__in=config.featured_category_ids)
+    cat_data = [
+        {
+            'id': cat.id,
+            'name': cat.name,
+            'image': cat.image.url if cat.image else None
+        } for cat in categories
+    ]
+
+    # Fetch featured products (assuming Product has name and image fields)
+    products = Product.objects.filter(id__in=config.featured_product_ids)
+    prod_data = [
+        {
+            'id': prod.id,
+            'name': prod.name,
+            'image': prod.image.url if prod.image else None  # Adjust if your Product model has a different image field
+        } for prod in products
+    ]
+
+    # Fetch featured manufacturers
+    manufacturers = Manufacturer.objects.filter(id__in=config.featured_manufacturer_ids)
+    mfr_data = [
+        {
+            'id': man.id,
+            'name': man.name,
+            'website': man.website,
+            'image': man.image.url if man.image else None
+        } for man in manufacturers
+    ]
+
+    return JsonResponse({
+        'categories': cat_data,
+        'products': prod_data,
+        'manufacturers': mfr_data
+    })
 
 def get_subcategories(category_id):
     """ Recursively get all subcategories for a given category ID """
@@ -133,6 +183,54 @@ def product_list(request):
 #------------------------------
 #         AUTH
 #------------------------------
+#Request Reset Password
+@api_view(['POST'])
+def forgot_password(request):
+    """Send password reset link"""
+    email = request.data.get("email")
+    if not email:
+        return Response({"error": "Email is required"}, status=status.HTTP_400_BAD_REQUEST)
+
+    try:
+        user = User.objects.get(email=email)
+    except User.DoesNotExist:
+        # Don't reveal if the email exists (security best practice)
+        return Response({"message": "If this email exists, a reset link has been sent."}, status=status.HTTP_200_OK)
+
+    # Generate uid and token
+    uid = urlsafe_base64_encode(force_bytes(user.pk))
+    token = default_token_generator.make_token(user)
+
+    reset_link = f"{settings.FRONTEND_URL}/reset-password/{uid}/{token}/"
+
+    # Send email
+    subject = "Password Reset Request"
+    message = f"Hi {user.username},\n\nClick the link below to reset your password:\n{reset_link}\n\nIf you did not request this, please ignore."
+    
+    send_mail(subject, message, None, [user.email])
+
+    return Response({"message": "If this email exists, a reset link has been sent."}, status=status.HTTP_200_OK)
+#Reset Password
+@api_view(['POST'])
+def reset_password(request, uidb64, token):
+    """Reset password using token from email"""
+    try:
+        uid = urlsafe_base64_decode(uidb64).decode()
+        user = User.objects.get(pk=uid)
+    except (TypeError, ValueError, OverflowError, User.DoesNotExist):
+        return Response({"error": "Invalid link"}, status=status.HTTP_400_BAD_REQUEST)
+
+    if not default_token_generator.check_token(user, token):
+        return Response({"error": "Invalid or expired token"}, status=status.HTTP_400_BAD_REQUEST)
+
+    new_password = request.data.get("password")
+    if not new_password:
+        return Response({"error": "Password is required"}, status=status.HTTP_400_BAD_REQUEST)
+
+    user.set_password(new_password)
+    user.save()
+
+    return Response({"message": "Password has been reset successfully."}, status=status.HTTP_200_OK)
 #`login_user` view to handle sign-in requests
 @api_view(['POST'])
 def login_user(request):
@@ -690,6 +788,19 @@ def stripe_webhook(request):
             return HttpResponse(status=500)
 
     return HttpResponse(status=200)
+
+def send_order_confirmation(order, user):
+    subject = f"Order Confirmation #{order.id}"
+    message = render_to_string("emails/order_confirmation.txt", {"order": order, "user": user})
+    html_message = render_to_string("emails/order_confirmation.html", {"order": order, "user": user})
+
+    send_mail(
+        subject,
+        message,
+        None,  # will use DEFAULT_FROM_EMAIL
+        [user.email],
+        html_message=html_message,
+    )
 
 ### UPS ###
 from .services.ups_service import get_shipping_rates

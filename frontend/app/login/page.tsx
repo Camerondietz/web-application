@@ -52,6 +52,7 @@ const Login = () => {
               You are logged in!
             </p>
           ) : (
+            <>
             <form onSubmit={handleSubmit} className="space-y-4">
               <input
                 type="text"
@@ -77,6 +78,15 @@ const Login = () => {
                 {loading ? "Logging in..." : "Login"}
               </button>
             </form>
+            <div className="mt-4 text-center">
+              <Link
+                href="/forgot-password"
+                className="text-blue-600 hover:text-blue-800 dark:text-blue-400 dark:hover:text-blue-300"
+              >
+                Forgot your username or password?
+              </Link>
+            </div>
+            </>
           )}
         </div>
       </div>

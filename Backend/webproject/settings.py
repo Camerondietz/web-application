@@ -196,3 +196,13 @@ DIGIKEY_PRODUCT_URL = 'https://api.digikey.com/products/v4/search/{digikey_part_
 ERPNEXT_BASE_URL = "http://localhost:8080"
 ERPNEXT_API_KEY = os.environ.get("ERPNEXT_API_KEY")
 ERPNEXT_API_SECRET = os.environ.get("ERPNEXT_API_SECRET")
+
+#AWS Credentials
+AWS_ACCESS_KEY_ID = os.environ.get("AWS_ACCESS_KEY_ID")
+AWS_SECRET_ACCESS_KEY = os.environ.get("AWS_SECRET_ACCESS_KEY")
+AWS_SES_REGION_NAME = os.environ.get("AWS_SES_REGION_NAME")
+AWS_SES_REGION_ENDPOINT = os.environ.get("AWS_SES_REGION_ENDPOINT")
+
+# Django Email Backend using Amazon SES
+EMAIL_BACKEND = 'django_ses.SESBackend'
+DEFAULT_FROM_EMAIL = 'noreply@aventrek.com'

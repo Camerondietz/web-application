@@ -25,7 +25,7 @@ urlpatterns = [
     path('products',views.product_list),
     path('products/<int:product_id>', views.product_detail),
     path('products/<int:product_id>/', views.product_detail),
-    path('',views.home),
+    path('homepage-featured/', views.homepage_featured, name='homepage_featured'),
 
     ### AUTH ###
     # Path for registration
@@ -43,6 +43,8 @@ urlpatterns = [
     path("account/", views.get_account_details, name="account-details"),
     path("account/update/", views.update_account_details, name="account-update"),
     path("account/change-password/", views.change_password, name="account-change-password"),
+    path("forgot-password/", views.forgot_password),
+    path("reset-password/<uidb64>/<token>/", views.reset_password),
 
     ### ADDRESS ###
     # List all addresses for authenticated user

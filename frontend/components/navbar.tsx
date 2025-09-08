@@ -102,7 +102,7 @@ const Navbar = () => {
             </button>
           </div>
         ) : (
-          <div className="flex space-x-2">
+          <div className="flex">
             <Link className="px-2" href="/login">
               Login
             </Link>

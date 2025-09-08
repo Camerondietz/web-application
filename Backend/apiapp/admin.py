@@ -1,8 +1,11 @@
 from django.contrib import admin
-from .models import Address, Category, Product, Manufacturer, Order, OrderItem, Payment, Supplier, ProductSupplier, EtimClass, EtimGroup, EtimFeature
+from django.forms import Textarea
+from .models import Address, Category, CategoryAttribute, Product, Manufacturer, Order, OrderItem, Payment, Supplier, ProductSupplier, EtimClass, EtimGroup, EtimFeature, HomepageConfig
 
 #admin.site.register(User)
 admin.site.register(Category)
+admin.site.register(CategoryAttribute)
+
 admin.site.register(Address)
 admin.site.register(Product)
 admin.site.register(Manufacturer)
@@ -15,3 +18,27 @@ admin.site.register(ProductSupplier)
 admin.site.register(EtimClass)
 admin.site.register(EtimGroup)
 admin.site.register(EtimFeature)
+
+
+class HomepageConfigAdmin(admin.ModelAdmin):
+    list_display = ['__str__']
+    search_fields = ['updated_at']
+
+    # You can specify how the array fields are displayed in the admin list
+    def featured_product_ids_display(self, obj):
+        return ', '.join(map(str, obj.featured_product_ids))
+
+    def featured_category_ids_display(self, obj):
+        return ', '.join(map(str, obj.featured_category_ids))
+
+    def featured_manufacturer_ids_display(self, obj):
+        return ', '.join(map(str, obj.featured_manufacturer_ids))
+
+    list_display += [
+        'featured_product_ids_display', 
+        'featured_category_ids_display', 
+        'featured_manufacturer_ids_display'
+    ]
+    
+
+admin.site.register(HomepageConfig, HomepageConfigAdmin)

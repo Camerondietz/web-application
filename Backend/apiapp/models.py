@@ -1,7 +1,7 @@
 import sys
 from django.utils.timezone import now
 from django.contrib.auth.models import User
-
+from django.contrib.postgres.fields import ArrayField
 try:
     from django.db import models
 except Exception:
@@ -43,9 +43,32 @@ class Category(models.Model):
     name = models.CharField(max_length=255, unique=True)
     description = models.TextField(null=True, blank=True)
     parent_category = models.ForeignKey('self', null=True, blank=True, on_delete=models.CASCADE, related_name='subcategories')
-    is_visible = models.BinaryField(blank=True, null=True, default=False)
+    is_visible = models.BooleanField(default=False, blank=False, null=False)
+    image = models.ImageField(upload_to='category_images/', blank=True, null=True)
     def __str__(self):
         return self.name
+    class Meta:
+        indexes = [
+            models.Index(fields=['parent_category']),
+            models.Index(fields=['is_visible']),
+        ]
+    
+    @property
+    def is_visible_with_children(self):
+        # Check if this category or any of its parents are visible
+        if self.is_visible:
+            return True
+        elif self.parent_category:
+            return self.parent_category.is_visible_with_children
+        return False
+    
+class CategoryAttribute(models.Model):
+    category = models.ForeignKey(Category, on_delete=models.CASCADE, related_name='attributes')
+    name = models.CharField(max_length=255)
+    value = models.CharField(max_length=255)
+
+    def __str__(self):
+        return f"{self.name}: {self.value}"
     
 # MFR Model
 class Manufacturer(models.Model):
@@ -53,9 +76,21 @@ class Manufacturer(models.Model):
     website = models.URLField(blank=True, null=True)
     contact_email = models.EmailField(blank=True, null=True)
     notes = models.TextField(blank=True, null=True)
-
+    image = models.ImageField(upload_to='manufacturer_images/', blank=True, null=True)
     def __str__(self):
         return self.name
+    
+class HomepageConfig(models.Model):
+    featured_product_ids = ArrayField(models.IntegerField(), blank=True, default=list)
+    featured_category_ids = ArrayField(models.IntegerField(), blank=True, default=list)
+    featured_manufacturer_ids = ArrayField(models.IntegerField(), blank=True, default=list)
+updated_at = models.DateTimeField(auto_now=True)
+def __str__(self):
+        return "Homepage Configuration"
+class Meta:
+        verbose_name = "Homepage Configuration"
+        verbose_name_plural = "Homepage Configuration"
+
 
 #Product Model
 class Product(models.Model):

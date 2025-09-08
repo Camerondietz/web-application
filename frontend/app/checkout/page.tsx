@@ -10,6 +10,7 @@ import type { Appearance } from '@stripe/stripe-js';
 import { RootState } from "@/store/store";
 import { useSelector, useDispatch } from "react-redux";
 import Cookies from "js-cookie";
+import { useRouter } from "next/navigation";
 
 //WHEN READY
 /*
@@ -26,7 +27,7 @@ export default function Checkout() {
     id: item.id,
     quantity: item.quantity,
   }));
-
+  const router = useRouter();
   const [clientSecret, setClientSecret] = useState<string | null>(null);
   const [shipping_amount, setshipping_amount] = useState<number | null>(null);
 
@@ -43,7 +44,6 @@ export default function Checkout() {
           'Content-Type': 'application/json',
           'Authorization': `Bearer ${token}`, // REQUIRED for JWT
         },
-        credentials: 'include', // optional; needed for session auth with cookies
         body: JSON.stringify({ // sending cart data
           cartItems: simplifiedCart,
         }),
@@ -56,11 +56,17 @@ export default function Checkout() {
       } else {
         throw new Error(data.error || 'Failed to create checkout session');
       }
-    } catch (error) {
-      console.error('Error fetching client secret:', error);
+    } catch (error: any) {
+        if (error.response?.status === 401) {
+          // If token is expired, redirect to login page
+          router.push('/login');
+          console.error('Failed to fetch orders', error);
+        } else {
+          console.error('Error fetching client secret:', error);
+        }
       throw error;
     }
-  }, []);
+  }, [router]);
 
   //const appearance: Appearance = {theme: 'stripe',labels: 'floating',variables: {  colorPrimary: '#0570de',  colorBackground: '#f6f9fc',}};
   
