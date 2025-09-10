@@ -1,0 +1,23 @@
+Hi {{ user.username }},
+
+Thanks for your order!
+
+Order ID: {{ order.id }}
+Status: {{ order.status }}
+Total: ${{ order.total_price }}
+
+Items:
+{% for item in order.orderitem_set.all %}
+- {{ item.product_name }} (x{{ item.quantity }}) — ${{ item.price }}
+{% endfor %}
+
+Shipping Address:
+{{ order.shipping_street }}
+{% if order.shipping_street2 %}{{ order.shipping_street2 }}{% endif %}
+{{ order.shipping_city }}, {{ order.shipping_state }} {{ order.shipping_zip_code }}
+{{ order.shipping_country }}
+
+We’ll notify you when your order ships.
+
+Best,
+The Aventrek Team

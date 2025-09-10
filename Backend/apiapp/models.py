@@ -96,7 +96,7 @@ class Meta:
 class Product(models.Model):
     name = models.CharField(max_length=255)
     description = models.TextField(blank=True, null=True)
-    price = models.DecimalField(max_digits=10, decimal_places=2)  # retail price
+    price = models.DecimalField(max_digits=10, decimal_places=2)  # Base retail price
     stock = models.PositiveIntegerField()
     category = models.ForeignKey(Category, on_delete=models.SET_NULL, null=True, blank=True)
     image = models.ImageField(upload_to='products/', blank=True, null=True)

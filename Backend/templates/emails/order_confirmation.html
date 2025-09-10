@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <title>Order Confirmation #{{ order.id }}</title>
+</head>
+<body style="font-family: Arial, sans-serif; line-height: 1.5; color: #333;">
+  <h2>Hi {{ user.username }},</h2>
+
+  <p>Thanks for your order!</p>
+
+  <p>
+    <strong>Order ID:</strong> {{ order.id }}<br>
+    <strong>Status:</strong> {{ order.status }}<br>
+    <strong>Total:</strong> ${{ order.total_price }}
+  </p>
+
+  <h3>Items</h3>
+  <table cellpadding="8" cellspacing="0" border="1" style="border-collapse: collapse; width: 100%;">
+    <thead>
+      <tr>
+        <th align="left">Product</th>
+        <th align="center">Quantity</th>
+        <th align="right">Price</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for item in order.orderitem_set.all %}
+      <tr>
+        <td>{{ item.product_name }}</td>
+        <td align="center">{{ item.quantity }}</td>
+        <td align="right">${{ item.price }}</td>
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+
+  <h3>Shipping Address</h3>
+  <p>
+    {{ order.shipping_street }}<br>
+    {% if order.shipping_street2 %}{{ order.shipping_street2 }}<br>{% endif %}
+    {{ order.shipping_city }}, {{ order.shipping_state }} {{ order.shipping_zip_code }}<br>
+    {{ order.shipping_country }}
+  </p>
+
+  <p>We’ll notify you when your order ships.</p>
+
+  <p>Best,<br>The Aventrek Team</p>
+</body>
+</html>

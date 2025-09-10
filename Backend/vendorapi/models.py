@@ -1,6 +1,23 @@
 # vendors/models.py
-
 from django.db import models
+
+#MAIN
+class Vendor(models.Model):
+    name = models.CharField(max_length=100, unique=True)
+
+    def __str__(self):
+        return self.name
+
+class VendorPart(models.Model):
+    product = models.ForeignKey('DJProduct', on_delete=models.CASCADE, related_name='vendor_parts')
+    vendor = models.ForeignKey(Vendor, on_delete=models.CASCADE)
+    vendor_pn = models.CharField(max_length=200)
+
+    class Meta:
+        unique_together = ('product', 'vendor')
+
+    def __str__(self):
+        return f"{self.vendor.name} - {self.vendor_pn}"
 
 class DJManufacturer(models.Model):
     external_id = models.IntegerField(unique=True)

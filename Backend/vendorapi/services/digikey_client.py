@@ -1,10 +1,12 @@
 # vendorapi/services/digikey_client.py
 import requests
+import logging
 from django.conf import settings
 from datetime import datetime, timedelta, timezone
 from vendorapi.models import DJProduct, DJManufacturer, DJCategory, DJPackageType, DJProductVariation, DJProductStatus, DJParameter, DJStandardPricing, DJProductOtherName
 from django.http import JsonResponse
 
+logger = logging.getLogger(__name__)
 
 class DigiKeyAPI:
     token = None
@@ -46,13 +48,47 @@ class DigiKeyAPI:
         }
 
         url = settings.DIGIKEY_PRODUCT_URL.format(digikey_part_number=part_number)
-        response = requests.get(url, headers=headers)
-
-        if response.status_code == 200:
+        try:
+            response = requests.get(url, headers=headers)
+            response.raise_for_status()
+            logger.info(f"Fetched details for Digi-Key part {part_number}.")
             return response.json()
-        else:
-            # Log or raise error appropriately
-            return None
+        except requests.exceptions.RequestException as e:
+            logger.error(f"Failed to fetch details for Digi-Key part {part_number}: {str(e)}")
+            raise ValueError(f"Failed to fetch data from Digi-Key: {str(e)}")
+
+    @classmethod
+    def get_pricing_and_stock(cls, part_number: str) -> dict:
+        """
+        Fetch and extract only pricing and stock (prioritized).
+        Standard format: {'stock': int, 'variations': list of dicts with 'digikey_pn', 'package_type', 'stock', 'price_breaks'}
+        """
+        data = cls.fetch_product_details(part_number)
+        if not data or 'Product' not in data:
+            raise ValueError("No product data returned from Digi-Key")
+
+        product_data = data['Product']
+        overall_stock = product_data.get('QuantityAvailable', 0)
+        variations = []
+
+        for var_data in product_data.get('ProductVariations', []):
+            var_stock = var_data.get('QuantityAvailableforPackageType', 0)
+            price_breaks = [
+                {
+                    'break_quantity': p.get('BreakQuantity', 1),
+                    'unit_price': p.get('UnitPrice', 0.0),
+                    'total_price': p.get('TotalPrice', 0.0)
+                }
+                for p in var_data.get('StandardPricing', [])
+            ]
+            variations.append({
+                'digikey_pn': var_data.get('DigiKeyProductNumber', ''),
+                'package_type': var_data.get('PackageType', {}).get('Name', ''),
+                'stock': var_stock,
+                'price_breaks': price_breaks
+            })
+
+        return {'stock': overall_stock, 'variations': variations}
 
     @staticmethod
     def import_product_from_digikey(part_number: str) -> dict:

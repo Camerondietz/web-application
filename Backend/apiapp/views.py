@@ -1,4 +1,5 @@
 import os
+import logging
 from django.http import HttpResponse,JsonResponse
 from django.shortcuts import render, get_object_or_404
 from django.core.paginator import Paginator
@@ -24,6 +25,9 @@ from django.utils.http import urlsafe_base64_encode, urlsafe_base64_decode
 from django.utils.encoding import force_bytes
 from django.core.mail import send_mail
 from django.template.loader import render_to_string
+from vendorapi.functions import get_prices_for_parts
+
+logger = logging.getLogger(__name__)
 
 #from django.views.decorators.csrf import csrf_protect
 from .services.ERP_services import process_checkout_session, ShipAddress, get_orders_for_user, get_order_details
@@ -180,6 +184,53 @@ def product_list(request):
         "has_next_page": paginated_products.has_next()
     }, safe=False)
 
+
+@api_view(['GET'])
+def SellPricesView(request):
+    product_ids_str = request.query_params.get('product_ids', '')
+    if not product_ids_str:
+        logger.error("Missing product_ids parameter.")
+        return Response({'status': 'error', 'message': 'Missing product_ids'}, status=status.HTTP_400_BAD_REQUEST)
+
+    try:
+        product_ids = [int(pid) for pid in product_ids_str.split(',')]
+        if len(product_ids) > 50:
+            logger.error("Too many product IDs requested.")
+            return Response({'status': 'error', 'message': 'Too many product IDs (max 50)'}, status=status.HTTP_400_BAD_REQUEST)
+    except ValueError:
+        logger.error("Invalid product_ids format.")
+        return Response({'status': 'error', 'message': 'Invalid product_ids format'}, status=status.HTTP_400_BAD_REQUEST)
+
+    try:
+        #EDIT STARTING HERE
+        vendor_prices = get_prices_for_parts(product_ids)
+        sell_prices = {}
+        for pid, suppliers in vendor_prices.items():
+            if 'error' in suppliers:
+                sell_prices[pid] = None
+                continue
+
+            # Find lowest unit price for quantity=1 across all suppliers/variations
+            min_price = None
+            for supplier, data in suppliers.items():
+                if 'error' in data:
+                    continue
+                for variation in data.get('variations', []):
+                    for pb in variation.get('price_breaks', []):
+                        if pb['break_quantity'] == 1:
+                            price = pb['unit_price']
+                            if min_price is None or price < min_price:
+                                min_price = price
+
+            # Calculate sell price: 20% markup or None if no valid price
+            sell_prices[pid] = round(min_price * 1.2, 2) if min_price is not None else None
+
+        logger.info(f"Fetched sell prices for product IDs: {product_ids}")
+        return Response({'status': 'success', 'data': sell_prices}, status=status.HTTP_200_OK)
+    except Exception as e:
+        logger.error(f"Unexpected error in SellPricesView: {str(e)}")
+        return Response({'status': 'error', 'message': 'Failed to fetch sell prices'}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+
 #------------------------------
 #         AUTH
 #------------------------------
@@ -210,7 +261,7 @@ def forgot_password(request):
     send_mail(subject, message, None, [user.email])
 
     return Response({"message": "If this email exists, a reset link has been sent."}, status=status.HTTP_200_OK)
-#Reset Password
+#Reset Password Page
 @api_view(['POST'])
 def reset_password(request, uidb64, token):
     """Reset password using token from email"""
@@ -695,6 +746,7 @@ def stripe_webhook(request):
         session = event['data']['object']
         session_id = session['id']
         metadata = session.get('metadata', {})
+        errors = []  # Collect all errors
         try:
             total_order_price = Decimal(session['amount_total']) / 100
             user_id = metadata.get("user_id")
@@ -709,12 +761,10 @@ def stripe_webhook(request):
                 order_status = "Cancelled"
             else:
                 order_status = "Pending"
-
+            #Shipping Info
             collected = session.get('collected_information') or {}
             shipping_details = collected.get('shipping_details') or {}
             shipping = shipping_details.get('address') or {}
-
-            # Fallback to customer_details.address if empty
             if not shipping:
                 shipping = session.get("customer_details", {}).get("address", {}) or {}
 
@@ -732,6 +782,8 @@ def stripe_webhook(request):
             order_shipping_state = shipping.get('state', '')
             order_shipping_zip = shipping.get('postal_code', '')
             order_shipping_country = shipping.get('country', '')
+
+            # Step 1: ERP Sync
             try:
                 result = process_checkout_session(
                     session=session,
@@ -742,7 +794,10 @@ def stripe_webhook(request):
                 )
                 print('ERPNext sync result:', result)
             except Exception as e:
-                print('Webhook processing failed:', e)
+                errors.append(f"ERP sync failed: {e}")
+                traceback.print_exc()
+            
+            # Step 2: Save or update Order
             try:
                 #existing order
                 order = Order.objects.get(stripe_session_id=session_id)
@@ -751,40 +806,59 @@ def stripe_webhook(request):
                 order.save()
 
             except Order.DoesNotExist:
-                # Fallback if no order pre-created
-                order = Order.objects.create(
-                    user=user,
-                    email=customer_email,
-                    status=order_status,
-                    stripe_session_id=session_id,
-                    total_price=total_order_price,
-                    shipping_street=order_shipping_street,
-                    shipping_street2=order_shipping_street2,
-                    shipping_city=order_shipping_city,
-                    shipping_state=order_shipping_state,
-                    shipping_zip_code=order_shipping_zip,
-                    shipping_country=order_shipping_country,
+                try:
+                    # Fallback if no order pre-created
+                    order = Order.objects.create(
+                        user=user,
+                        email=customer_email,
+                        status=order_status,
+                        stripe_session_id=session_id,
+                        total_price=total_order_price,
+                        shipping_street=order_shipping_street,
+                        shipping_street2=order_shipping_street2,
+                        shipping_city=order_shipping_city,
+                        shipping_state=order_shipping_state,
+                        shipping_zip_code=order_shipping_zip,
+                        shipping_country=order_shipping_country,
 
-                )
-                print(stripe_line_items)
-                for item in stripe_line_items['data']:
-                    product_id = item['description']
-                    quantity = item.get('quantity', 1)
-                    amount_total = Decimal(item.get('amount_total', 0)) / 100
-
-                    product = Product.objects.filter(name=product_id).first()
-
-                    OrderItem.objects.create(
-                        order=order,
-                        product=product,
-                        product_name=product.name if product else item['description'],
-                        quantity=quantity,
-                        price=amount_total,
                     )
+                    print(stripe_line_items)
+                    for item in stripe_line_items['data']:
+                        product_id = item['description']
+                        quantity = item.get('quantity', 1)
+                        amount_total = Decimal(item.get('amount_total', 0)) / 100
+
+                        product = Product.objects.filter(name=product_id).first()
+
+                        OrderItem.objects.create(
+                            order=order,
+                            product=product,
+                            product_name=product.name if product else item['description'],
+                            quantity=quantity,
+                            price=amount_total,
+                        )
+                except Exception as e:
+                    errors.append(f"Order creation failed: {e}")
+                    traceback.print_exc()
+            except Exception as e:
+                errors.append(f"Order update failed: {e}")
+                traceback.print_exc()
+
+            # Step 3: Send Confirmation Email
+            try:
+                if order and user:
+                    send_order_confirmation(order, user)
+            except Exception as e:
+                errors.append(f"Email sending failed: {e}")
+                traceback.print_exc()
 
         except Exception as e:
-            print(f"Webhook error: {e}")
+            errors.append(f"General webhook error: {e}")
             traceback.print_exc()
+
+        # Final response
+        if errors:
+            print("Webhook finished with errors:", errors)
             return HttpResponse(status=500)
 
     return HttpResponse(status=200)

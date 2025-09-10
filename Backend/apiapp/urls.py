@@ -26,6 +26,7 @@ urlpatterns = [
     path('products/<int:product_id>', views.product_detail),
     path('products/<int:product_id>/', views.product_detail),
     path('homepage-featured/', views.homepage_featured, name='homepage_featured'),
+    path('PricesView/', views.SellPricesView), #/vendorapi/prices/?product_ids=1,2,3
 
     ### AUTH ###
     # Path for registration

@@ -5,6 +5,7 @@ import Link from "next/link";
 import { motion } from "framer-motion";
 import Image from 'next/image'
 import { Suspense } from 'react';
+import PriceLoader from '@/components/PriceLoader';
 
 interface Product {
   id: number;
@@ -133,9 +134,7 @@ function ProductsPage() {
                 />
                 <h2 className="mt-3 text-lg break-words font-semibold">{product.name || "Unnamed Product"}</h2>
                 <p className="text-gray-700 dark:text-gray-300 text-sm">{product.category?.name || "No Category"}</p>
-                <p className="mt-2 text-xl font-bold text-gray-700 dark:text-gray-300">
-                ${product.price.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
-                </p>
+                <PriceLoader productId={product.id} />
               </motion.div>
             </Link>
           ))
