@@ -85,6 +85,9 @@ const Login = () => {
               >
                 Forgot your username or password?
               </Link>
+              <Link className="text-blue-600 hover:text-blue-800 dark:text-blue-400 dark:hover:text-blue-300 px-2" href="/register">
+                Register
+              </Link>
             </div>
             </>
           )}

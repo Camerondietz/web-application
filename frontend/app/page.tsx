@@ -96,7 +96,7 @@ export default function Home() {
               <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
                 {featured.categories.length > 0 ? (
                   featured.categories.map((cat) => (
-                    <Link key={cat.id} href={`/categories/${cat.id}`} className="block">
+                    <Link key={cat.id} href={`/products?category=${cat.id}`} className="block">
                       <div className="bg-gray-50 dark:bg-gray-800 p-4 rounded-xl shadow-sm hover:shadow-md transition text-center">
                         {cat.image && <img src={cat.image ? `${process.env.NEXT_PUBLIC_API_URL}${cat.image}` : "@/public/placeholder.jpg"} alt={cat.name} className="w-full h-40 object-cover rounded-md mb-4" />}
                         <h3 className="text-lg font-semibold">{cat.name}</h3>
@@ -107,6 +107,7 @@ export default function Home() {
                   <div className="col-span-full text-center text-gray-500 dark:text-gray-400">No featured categories available.</div>
                 )}
               </div>
+              <Link href={`/categories`}><h4 className="text-m mb-2 text-right">All Categories</h4></Link>
             </section>
 
             <section className="mt-16 w-full max-w-6xl">

@@ -14,7 +14,7 @@ const Carousel = () => {
     navigation
     pagination={{ clickable: true }}
     autoplay={{
-      delay: 6000, // Time between slides (3 seconds)
+      delay: 4500, // Time between slides (1000 =  seconds)
       disableOnInteraction: false, // Keep autoplay even when the user interacts with the carousel
     }}
     className="my-12 w-full max-w-6xl h-[400px] sm:h-[400px] md:h-[500px]" // Adjust height on different screen sizes

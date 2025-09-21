@@ -27,6 +27,8 @@ DEBUG = True
 
 ALLOWED_HOSTS = ["127.0.0.1","http://api.cameron-dietz.com","api.cameron-dietz.com","localhost","http://127.0.0.1:8000","https://api.cameron-dietz.com"]
 
+AUTO_PRICE_VALIDITY_DAYS = 1
+
 # Application definition
 
 INSTALLED_APPS = [
@@ -112,6 +114,30 @@ TEMPLATES = [
     },
 ]
 
+LOGGING = {
+    'version': 1,
+    'disable_existing_loggers': False,
+    'handlers': {
+        'file': {
+            'level': 'DEBUG',
+            'class': 'logging.FileHandler',
+            'filename': 'apiapp.log',
+        },
+    },
+    'loggers': {
+        'apiapp': {
+            'handlers': ['file'],
+            'level': 'DEBUG',
+            'propagate': True,
+        },
+        'vendorapi': {
+            'handlers': ['file'],
+            'level': 'DEBUG',
+            'propagate': True,
+        },
+    },
+}
+
 WSGI_APPLICATION = 'webproject.wsgi.application'
 
 
@@ -155,7 +181,7 @@ AUTH_PASSWORD_VALIDATORS = [
 
 LANGUAGE_CODE = 'en-us'
 
-TIME_ZONE = 'UTC'
+TIME_ZONE = "America/Chicago"
 
 USE_I18N = True
 

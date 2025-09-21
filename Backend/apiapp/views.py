@@ -3,8 +3,9 @@ import logging
 from django.http import HttpResponse,JsonResponse
 from django.shortcuts import render, get_object_or_404
 from django.core.paginator import Paginator
-from .models import Category, Product, Manufacturer, Order, OrderItem, Address, HomepageConfig
+from .models import Category, Product, Manufacturer, Order, OrderItem, Address, QuoteRequest, HomepageConfig
 from .serializers import CategorySerializer, ProductSerializer, AddressSerializer
+from .functions import get_sell_price
 from rest_framework.decorators import api_view, permission_classes
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
@@ -202,34 +203,121 @@ def SellPricesView(request):
         return Response({'status': 'error', 'message': 'Invalid product_ids format'}, status=status.HTTP_400_BAD_REQUEST)
 
     try:
-        #EDIT STARTING HERE
-        vendor_prices = get_prices_for_parts(product_ids)
+        user_id = request.user.id if request.user.is_authenticated else None
         sell_prices = {}
-        for pid, suppliers in vendor_prices.items():
-            if 'error' in suppliers:
+        for pid in product_ids:
+            result = get_sell_price(pid, user_id)
+            print(result)
+            if result['status'] == 'success':
+                sell_prices[pid] = float(result['sell_price']) if result['sell_price'] is not None else None
+            elif result['status'] == 'quote':
                 sell_prices[pid] = None
-                continue
-
-            # Find lowest unit price for quantity=1 across all suppliers/variations
-            min_price = None
-            for supplier, data in suppliers.items():
-                if 'error' in data:
-                    continue
-                for variation in data.get('variations', []):
-                    for pb in variation.get('price_breaks', []):
-                        if pb['break_quantity'] == 1:
-                            price = pb['unit_price']
-                            if min_price is None or price < min_price:
-                                min_price = price
-
-            # Calculate sell price: 20% markup or None if no valid price
-            sell_prices[pid] = round(min_price * 1.2, 2) if min_price is not None else None
+            else:
+                sell_prices[pid] = None
 
         logger.info(f"Fetched sell prices for product IDs: {product_ids}")
         return Response({'status': 'success', 'data': sell_prices}, status=status.HTTP_200_OK)
     except Exception as e:
         logger.error(f"Unexpected error in SellPricesView: {str(e)}")
         return Response({'status': 'error', 'message': 'Failed to fetch sell prices'}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+
+
+@api_view(['POST'])
+def QuoteRequestView(request):
+    try:
+        data = request.data
+        name = data.get('name')
+        email = data.get('email')
+        phone = data.get('phone')
+        product_id = data.get('product_id')
+        custom_pn = data.get('custom_pn')
+        quantity = data.get('quantity')
+        notes = data.get('notes')
+
+        # Validation
+        if not name or not email:
+            logger.error("Missing required fields: name or email")
+            return Response(
+                {'status': 'error', 'message': 'Name and email are required'},
+                status=status.HTTP_400_BAD_REQUEST
+            )
+
+        if not product_id and not custom_pn:
+            logger.error("Missing product_id or custom_pn")
+            return Response(
+                {'status': 'error', 'message': 'Either product_id or custom part number is required'},
+                status=status.HTTP_400_BAD_REQUEST
+            )
+
+        try:
+            quantity = int(quantity)
+            if quantity < 1:
+                raise ValueError
+        except (TypeError, ValueError):
+            logger.error("Invalid quantity provided")
+            return Response(
+                {'status': 'error', 'message': 'Quantity must be a positive integer'},
+                status=status.HTTP_400_BAD_REQUEST
+            )
+
+        # Fetch product if product_id is provided
+        product = None
+        if product_id:
+            try:
+                product = Product.objects.get(id=product_id)
+            except Product.DoesNotExist:
+                logger.error(f"Product with id {product_id} not found")
+                return Response(
+                    {'status': 'error', 'message': 'Invalid product_id'},
+                    status=status.HTTP_400_BAD_REQUEST
+                )
+
+        # Create quote request
+        quote_request = QuoteRequest.objects.create(
+            name=name,
+            email=email,
+            phone=phone,
+            product=product,
+            custom_pn=custom_pn,
+            quantity=quantity,
+            notes=notes,
+            user=request.user if request.user.is_authenticated else None
+        )
+
+        # Send email notification to admin
+        try:
+            product_info = f"Product: {product.name} (ID: {product_id})" if product else f"Custom PN: {custom_pn or 'N/A'}"
+            send_mail(
+                subject=f"New Quote Request #{quote_request.id}",
+                message=(
+                    f"New quote request received:\n\n"
+                    f"Name: {name}\n"
+                    f"Email: {email}\n"
+                    f"Phone: {phone or 'N/A'}\n"
+                    f"{product_info}\n"
+                    f"Quantity: {quantity}\n"
+                    f"Notes: {notes or 'N/A'}\n"
+                    f"Submitted at: {quote_request.created_at}"
+                ),
+                from_email=settings.DEFAULT_FROM_EMAIL,
+                recipient_list=[settings.ADMIN_EMAIL],  # Configure in settings.py
+                fail_silently=False,
+            )
+            logger.info(f"Quote request #{quote_request.id} created and email sent")
+        except Exception as e:
+            logger.error(f"Failed to send email for quote request #{quote_request.id}: {str(e)}")
+
+        return Response(
+            {'status': 'success', 'message': 'Quote request submitted successfully', 'id': quote_request.id},
+            status=status.HTTP_201_CREATED
+        )
+
+    except Exception as e:
+        logger.error(f"Unexpected error in QuoteRequestView: {str(e)}")
+        return Response(
+            {'status': 'error', 'message': 'Failed to process quote request'},
+            status=status.HTTP_500_INTERNAL_SERVER_ERROR
+        )
 
 #------------------------------
 #         AUTH

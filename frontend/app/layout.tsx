@@ -9,8 +9,8 @@ import Sidebar from "@/components/sidebar";
 
 export const metadata: Metadata = {
   title: {
-    default: "E-commerce store",
-    template: "%s | E-commerce store"
+    default: "Aventrek",
+    template: "%s | Aventrek"
   },
   description: "Quality products at great prices",
 };

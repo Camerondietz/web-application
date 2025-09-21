@@ -1,0 +1,988 @@
+Fetched details for Digi-Key part 5625-OM3PGP4512Q-A0-ND.
+Fetched prices for product IDs: [45]
+Non-automatic pricing for product 44; requesting quote.
+Fetched sell prices for product IDs: [44]
+Non-automatic pricing for product 45; requesting quote.
+Fetched sell prices for product IDs: [45]
+Non-automatic pricing for product 3; requesting quote.
+Fetched sell prices for product IDs: [3]
+Non-automatic pricing for product 2; requesting quote.
+Fetched sell prices for product IDs: [2]
+Non-automatic pricing for product 4; requesting quote.
+Fetched sell prices for product IDs: [4]
+Non-automatic pricing for product 5; requesting quote.
+Fetched sell prices for product IDs: [5]
+Non-automatic pricing for product 39; requesting quote.
+Fetched sell prices for product IDs: [39]
+Non-automatic pricing for product 7; requesting quote.
+Fetched sell prices for product IDs: [7]
+Non-automatic pricing for product 6; requesting quote.
+Fetched sell prices for product IDs: [6]
+Non-automatic pricing for product 40; requesting quote.
+Fetched sell prices for product IDs: [40]
+Non-automatic pricing for product 41; requesting quote.
+Fetched sell prices for product IDs: [41]
+Non-automatic pricing for product 42; requesting quote.
+Fetched sell prices for product IDs: [42]
+Non-automatic pricing for product 43; requesting quote.
+Fetched sell prices for product IDs: [43]
+Non-automatic pricing for product 44; requesting quote.
+Fetched sell prices for product IDs: [44]
+Non-automatic pricing for product 45; requesting quote.
+Fetched sell prices for product IDs: [45]
+Non-automatic pricing for product 45; requesting quote.
+Fetched sell prices for product IDs: [45]
+Non-automatic pricing for product 2; requesting quote.
+Fetched sell prices for product IDs: [2]
+Non-automatic pricing for product 3; requesting quote.
+Fetched sell prices for product IDs: [3]
+Non-automatic pricing for product 5; requesting quote.
+Fetched sell prices for product IDs: [5]
+Non-automatic pricing for product 6; requesting quote.
+Fetched sell prices for product IDs: [6]
+Non-automatic pricing for product 4; requesting quote.
+Fetched sell prices for product IDs: [4]
+Non-automatic pricing for product 7; requesting quote.
+Fetched sell prices for product IDs: [7]
+Non-automatic pricing for product 41; requesting quote.
+Fetched sell prices for product IDs: [41]
+Non-automatic pricing for product 42; requesting quote.
+Fetched sell prices for product IDs: [42]
+Non-automatic pricing for product 43; requesting quote.
+Fetched sell prices for product IDs: [43]
+Non-automatic pricing for product 39; requesting quote.
+Fetched sell prices for product IDs: [39]
+Non-automatic pricing for product 40; requesting quote.
+Fetched sell prices for product IDs: [40]
+Non-automatic pricing for product 44; requesting quote.
+Fetched sell prices for product IDs: [44]
+Non-automatic pricing for product 45; requesting quote.
+Fetched sell prices for product IDs: [45]
+Non-automatic pricing for product 3; requesting quote.
+Fetched sell prices for product IDs: [3]
+Non-automatic pricing for product 2; requesting quote.
+Fetched sell prices for product IDs: [2]
+Non-automatic pricing for product 4; requesting quote.
+Fetched sell prices for product IDs: [4]
+Non-automatic pricing for product 5; requesting quote.
+Fetched sell prices for product IDs: [5]
+Non-automatic pricing for product 6; requesting quote.
+Fetched sell prices for product IDs: [6]
+Non-automatic pricing for product 7; requesting quote.
+Fetched sell prices for product IDs: [7]
+Non-automatic pricing for product 40; requesting quote.
+Fetched sell prices for product IDs: [40]
+Non-automatic pricing for product 41; requesting quote.
+Fetched sell prices for product IDs: [41]
+Non-automatic pricing for product 42; requesting quote.
+Fetched sell prices for product IDs: [42]
+Non-automatic pricing for product 43; requesting quote.
+Fetched sell prices for product IDs: [43]
+Non-automatic pricing for product 39; requesting quote.
+Fetched sell prices for product IDs: [39]
+Non-automatic pricing for product 44; requesting quote.
+Fetched sell prices for product IDs: [44]
+Non-automatic pricing for product 45; requesting quote.
+Fetched sell prices for product IDs: [45]
+Non-automatic pricing for product 5; requesting quote.
+Fetched sell prices for product IDs: [5]
+Non-automatic pricing for product 4; requesting quote.
+Fetched sell prices for product IDs: [4]
+Non-automatic pricing for product 2; requesting quote.
+Fetched sell prices for product IDs: [2]
+Non-automatic pricing for product 7; requesting quote.
+Fetched sell prices for product IDs: [7]
+Non-automatic pricing for product 6; requesting quote.
+Fetched sell prices for product IDs: [6]
+Non-automatic pricing for product 39; requesting quote.
+Fetched sell prices for product IDs: [39]
+Non-automatic pricing for product 3; requesting quote.
+Fetched sell prices for product IDs: [3]
+Non-automatic pricing for product 40; requesting quote.
+Fetched sell prices for product IDs: [40]
+Non-automatic pricing for product 41; requesting quote.
+Fetched sell prices for product IDs: [41]
+Non-automatic pricing for product 42; requesting quote.
+Fetched sell prices for product IDs: [42]
+Non-automatic pricing for product 43; requesting quote.
+Fetched sell prices for product IDs: [43]
+Non-automatic pricing for product 44; requesting quote.
+Fetched sell prices for product IDs: [44]
+Non-automatic pricing for product 3; requesting quote.
+Fetched sell prices for product IDs: [3]
+Non-automatic pricing for product 6; requesting quote.
+Fetched sell prices for product IDs: [6]
+Non-automatic pricing for product 7; requesting quote.
+Fetched sell prices for product IDs: [7]
+Non-automatic pricing for product 5; requesting quote.
+Fetched sell prices for product IDs: [5]
+Non-automatic pricing for product 40; requesting quote.
+Fetched sell prices for product IDs: [40]
+Non-automatic pricing for product 42; requesting quote.
+Fetched sell prices for product IDs: [42]
+Non-automatic pricing for product 41; requesting quote.
+Fetched sell prices for product IDs: [41]
+Non-automatic pricing for product 4; requesting quote.
+Fetched sell prices for product IDs: [4]
+Non-automatic pricing for product 2; requesting quote.
+Fetched sell prices for product IDs: [2]
+Non-automatic pricing for product 43; requesting quote.
+Fetched sell prices for product IDs: [43]
+Returning cached sell price for product 44: 30.00
+Fetched sell prices for product IDs: [44]
+Non-automatic pricing for product 39; requesting quote.
+Fetched sell prices for product IDs: [39]
+Fetched details for Digi-Key part 5625-OM3PGP4512Q-A0-ND.
+Unexpected error in SellPricesView: 'quantity'
+Unexpected error in SellPricesView: 'decimal.Decimal' object has no attribute 'valid_until'
+Unexpected error in SellPricesView: 'decimal.Decimal' object has no attribute 'valid_until'
+Unexpected error in SellPricesView: 'decimal.Decimal' object has no attribute 'valid_until'
+Unexpected error in SellPricesView: 'decimal.Decimal' object has no attribute 'valid_until'
+Unexpected error in SellPricesView: 'decimal.Decimal' object has no attribute 'valid_until'
+Unexpected error in SellPricesView: 'decimal.Decimal' object has no attribute 'valid_until'
+Unexpected error in SellPricesView: 'decimal.Decimal' object has no attribute 'valid_until'
+Unexpected error in SellPricesView: 'decimal.Decimal' object has no attribute 'valid_until'
+Unexpected error in SellPricesView: 'decimal.Decimal' object has no attribute 'valid_until'
+Unexpected error in SellPricesView: 'decimal.Decimal' object has no attribute 'valid_until'
+Unexpected error in SellPricesView: 'decimal.Decimal' object has no attribute 'valid_until'
+Unexpected error in SellPricesView: 'decimal.Decimal' object has no attribute 'valid_until'
+Unexpected error in SellPricesView: 'decimal.Decimal' object has no attribute 'valid_until'
+Unexpected error in SellPricesView: 'decimal.Decimal' object has no attribute 'valid_until'
+Unexpected error in SellPricesView: 'decimal.Decimal' object has no attribute 'valid_until'
+Unexpected error in SellPricesView: 'decimal.Decimal' object has no attribute 'valid_until'
+Unexpected error in SellPricesView: 'decimal.Decimal' object has no attribute 'valid_until'
+Unexpected error in SellPricesView: 'decimal.Decimal' object has no attribute 'valid_until'
+Unexpected error in SellPricesView: 'decimal.Decimal' object has no attribute 'valid_until'
+Unexpected error in SellPricesView: 'decimal.Decimal' object has no attribute 'valid_until'
+Unexpected error in SellPricesView: 'decimal.Decimal' object has no attribute 'valid_until'
+Unexpected error in SellPricesView: 'decimal.Decimal' object has no attribute 'valid_until'
+Unexpected error in SellPricesView: 'decimal.Decimal' object has no attribute 'valid_until'
+Unexpected error in SellPricesView: 'decimal.Decimal' object has no attribute 'valid_until'
+Unexpected error in SellPricesView: 'decimal.Decimal' object has no attribute 'valid_until'
+Unexpected error in SellPricesView: 'decimal.Decimal' object has no attribute 'valid_until'
+Unexpected error in SellPricesView: 'decimal.Decimal' object has no attribute 'valid_until'
+Unexpected error in SellPricesView: 'decimal.Decimal' object has no attribute 'valid_until'
+Unexpected error in SellPricesView: 'decimal.Decimal' object has no attribute 'valid_until'
+Unexpected error in SellPricesView: 'decimal.Decimal' object has no attribute 'valid_until'
+Unexpected error in SellPricesView: 'decimal.Decimal' object has no attribute 'valid_until'
+Unexpected error in SellPricesView: 'decimal.Decimal' object has no attribute 'valid_until'
+Unexpected error in SellPricesView: 'decimal.Decimal' object has no attribute 'valid_until'
+Unexpected error in SellPricesView: 'decimal.Decimal' object has no attribute 'valid_until'
+Unexpected error in SellPricesView: 'decimal.Decimal' object has no attribute 'valid_until'
+Unexpected error in SellPricesView: 'decimal.Decimal' object has no attribute 'valid_until'
+Unexpected error in SellPricesView: 'decimal.Decimal' object has no attribute 'valid_until'
+Unexpected error in SellPricesView: 'decimal.Decimal' object has no attribute 'valid_until'
+Unexpected error in SellPricesView: 'decimal.Decimal' object has no attribute 'valid_until'
+Unexpected error in SellPricesView: 'decimal.Decimal' object has no attribute 'valid_until'
+Unexpected error in SellPricesView: 'decimal.Decimal' object has no attribute 'valid_until'
+Unexpected error in SellPricesView: 'decimal.Decimal' object has no attribute 'valid_until'
+Unexpected error in SellPricesView: 'decimal.Decimal' object has no attribute 'valid_until'
+Unexpected error in SellPricesView: 'decimal.Decimal' object has no attribute 'valid_until'
+Unexpected error in SellPricesView: 'decimal.Decimal' object has no attribute 'valid_until'
+Unexpected error in SellPricesView: 'decimal.Decimal' object has no attribute 'valid_until'
+Unexpected error in SellPricesView: 'decimal.Decimal' object has no attribute 'valid_until'
+Unexpected error in SellPricesView: 'decimal.Decimal' object has no attribute 'valid_until'
+Unexpected error in SellPricesView: 'decimal.Decimal' object has no attribute 'valid_until'
+Unexpected error in SellPricesView: 'decimal.Decimal' object has no attribute 'valid_until'
+Unexpected error in SellPricesView: 'decimal.Decimal' object has no attribute 'valid_until'
+Unexpected error in SellPricesView: 'decimal.Decimal' object has no attribute 'is_automatic'
+Unexpected error in SellPricesView: 'decimal.Decimal' object has no attribute 'is_automatic'
+Unexpected error in SellPricesView: 'decimal.Decimal' object has no attribute 'is_automatic'
+Unexpected error in SellPricesView: 'decimal.Decimal' object has no attribute 'is_automatic'
+Unexpected error in SellPricesView: 'decimal.Decimal' object has no attribute 'is_automatic'
+Unexpected error in SellPricesView: 'decimal.Decimal' object has no attribute 'is_automatic'
+Unexpected error in SellPricesView: 'decimal.Decimal' object has no attribute 'is_automatic'
+Unexpected error in SellPricesView: 'decimal.Decimal' object has no attribute 'is_automatic'
+Unexpected error in SellPricesView: 'decimal.Decimal' object has no attribute 'is_automatic'
+Unexpected error in SellPricesView: 'decimal.Decimal' object has no attribute 'is_automatic'
+Unexpected error in SellPricesView: 'decimal.Decimal' object has no attribute 'is_automatic'
+Unexpected error in SellPricesView: 'decimal.Decimal' object has no attribute 'is_automatic'
+Unexpected error in SellPricesView: 'decimal.Decimal' object has no attribute 'is_automatic'
+Unexpected error in SellPricesView: 'decimal.Decimal' object has no attribute 'is_automatic'
+Unexpected error in SellPricesView: 'decimal.Decimal' object has no attribute 'is_automatic'
+Unexpected error in SellPricesView: 'decimal.Decimal' object has no attribute 'is_automatic'
+Unexpected error in SellPricesView: 'decimal.Decimal' object has no attribute 'is_automatic'
+Unexpected error in SellPricesView: 'decimal.Decimal' object has no attribute 'is_automatic'
+Unexpected error in SellPricesView: 'decimal.Decimal' object has no attribute 'is_automatic'
+Unexpected error in SellPricesView: 'decimal.Decimal' object has no attribute 'is_automatic'
+Unexpected error in SellPricesView: 'decimal.Decimal' object has no attribute 'is_automatic'
+Unexpected error in SellPricesView: 'decimal.Decimal' object has no attribute 'is_automatic'
+Unexpected error in SellPricesView: 'decimal.Decimal' object has no attribute 'is_automatic'
+Unexpected error in SellPricesView: 'decimal.Decimal' object has no attribute 'is_automatic'
+Unexpected error in SellPricesView: 'decimal.Decimal' object has no attribute 'is_automatic'
+Non-automatic pricing for product 3; price unavailable.
+Fetched sell prices for product IDs: [3]
+Non-automatic pricing for product 2; price unavailable.
+Fetched sell prices for product IDs: [2]
+Non-automatic pricing for product 5; price unavailable.
+Fetched sell prices for product IDs: [5]
+Non-automatic pricing for product 4; price unavailable.
+Fetched sell prices for product IDs: [4]
+Non-automatic pricing for product 39; price unavailable.
+Fetched sell prices for product IDs: [39]
+Non-automatic pricing for product 6; price unavailable.
+Fetched sell prices for product IDs: [6]
+Non-automatic pricing for product 7; price unavailable.
+Fetched sell prices for product IDs: [7]
+Non-automatic pricing for product 40; price unavailable.
+Fetched sell prices for product IDs: [40]
+Non-automatic pricing for product 43; price unavailable.
+Fetched sell prices for product IDs: [43]
+Non-automatic pricing for product 44; price unavailable.
+Fetched sell prices for product IDs: [44]
+Non-automatic pricing for product 42; price unavailable.
+Fetched sell prices for product IDs: [42]
+Non-automatic pricing for product 41; price unavailable.
+Fetched sell prices for product IDs: [41]
+Unexpected error in SellPricesView: '>' not supported between instances of 'NoneType' and 'datetime.datetime'
+Non-automatic pricing for product 3; price unavailable.
+Fetched sell prices for product IDs: [3]
+Non-automatic pricing for product 4; price unavailable.
+Fetched sell prices for product IDs: [4]
+Non-automatic pricing for product 2; price unavailable.
+Fetched sell prices for product IDs: [2]
+Non-automatic pricing for product 5; price unavailable.
+Fetched sell prices for product IDs: [5]
+Non-automatic pricing for product 6; price unavailable.
+Fetched sell prices for product IDs: [6]
+Returning cached sell price for product 7: None
+Unexpected error in SellPricesView: 'decimal.Decimal' object has no attribute 'sell_price'
+Non-automatic pricing for product 39; price unavailable.
+Fetched sell prices for product IDs: [39]
+No valid cost found for product 40.
+Fetched sell prices for product IDs: [40]
+Non-automatic pricing for product 41; price unavailable.
+Fetched sell prices for product IDs: [41]
+Non-automatic pricing for product 42; price unavailable.
+Fetched sell prices for product IDs: [42]
+Non-automatic pricing for product 43; price unavailable.
+Fetched sell prices for product IDs: [43]
+Non-automatic pricing for product 44; price unavailable.
+Fetched sell prices for product IDs: [44]
+Fetched details for Digi-Key part 5625-OM3PGP4512Q-A0-ND.
+Unexpected error in SellPricesView: 'quantity'
+Non-automatic pricing for product 2; price unavailable.
+Fetched sell prices for product IDs: [2]
+Non-automatic pricing for product 5; price unavailable.
+Fetched sell prices for product IDs: [5]
+Non-automatic pricing for product 4; price unavailable.
+Fetched sell prices for product IDs: [4]
+Non-automatic pricing for product 6; price unavailable.
+Fetched sell prices for product IDs: [6]
+Returning cached sell price for product 7: None
+Unexpected error in SellPricesView: 'decimal.Decimal' object has no attribute 'sell_price'
+Non-automatic pricing for product 39; price unavailable.
+Fetched sell prices for product IDs: [39]
+Non-automatic pricing for product 3; price unavailable.
+Fetched sell prices for product IDs: [3]
+Non-automatic pricing for product 41; price unavailable.
+Fetched sell prices for product IDs: [41]
+Non-automatic pricing for product 42; price unavailable.
+Fetched sell prices for product IDs: [42]
+Non-automatic pricing for product 43; price unavailable.
+Fetched sell prices for product IDs: [43]
+Non-automatic pricing for product 44; price unavailable.
+Fetched sell prices for product IDs: [44]
+No valid cost found for product 40.
+Fetched sell prices for product IDs: [40]
+Non-automatic pricing for product 6; price unavailable.
+Fetched sell prices for product IDs: [6]
+Returning cached sell price for product 7: None
+Unexpected error in SellPricesView: 'decimal.Decimal' object has no attribute 'sell_price'
+Non-automatic pricing for product 5; price unavailable.
+Fetched sell prices for product IDs: [5]
+Non-automatic pricing for product 3; price unavailable.
+Fetched sell prices for product IDs: [3]
+Non-automatic pricing for product 4; price unavailable.
+Fetched sell prices for product IDs: [4]
+Non-automatic pricing for product 39; price unavailable.
+Fetched sell prices for product IDs: [39]
+Non-automatic pricing for product 41; price unavailable.
+Fetched sell prices for product IDs: [41]
+Non-automatic pricing for product 42; price unavailable.
+Fetched sell prices for product IDs: [42]
+Non-automatic pricing for product 43; price unavailable.
+Fetched sell prices for product IDs: [43]
+Non-automatic pricing for product 2; price unavailable.
+Fetched sell prices for product IDs: [2]
+Non-automatic pricing for product 44; price unavailable.
+Fetched sell prices for product IDs: [44]
+No valid cost found for product 40.
+Fetched sell prices for product IDs: [40]
+Fetched details for Digi-Key part 5625-OM3PGP4512Q-A0-ND.
+Unexpected error in SellPricesView: 'quantity'
+Non-automatic pricing for product 3; price unavailable.
+Fetched sell prices for product IDs: [3]
+Non-automatic pricing for product 2; price unavailable.
+Fetched sell prices for product IDs: [2]
+Non-automatic pricing for product 4; price unavailable.
+Fetched sell prices for product IDs: [4]
+Non-automatic pricing for product 5; price unavailable.
+Fetched sell prices for product IDs: [5]
+Non-automatic pricing for product 6; price unavailable.
+Fetched sell prices for product IDs: [6]
+Returning cached sell price for product 7: None
+Unexpected error in SellPricesView: 'decimal.Decimal' object has no attribute 'sell_price'
+No valid cost found for product 40.
+Fetched sell prices for product IDs: [40]
+Non-automatic pricing for product 41; price unavailable.
+Fetched sell prices for product IDs: [41]
+Non-automatic pricing for product 42; price unavailable.
+Fetched sell prices for product IDs: [42]
+Non-automatic pricing for product 44; price unavailable.
+Fetched sell prices for product IDs: [44]
+Non-automatic pricing for product 39; price unavailable.
+Fetched sell prices for product IDs: [39]
+Non-automatic pricing for product 43; price unavailable.
+Fetched sell prices for product IDs: [43]
+Fetched details for Digi-Key part 5625-OM3PGP4512Q-A0-ND.
+Unexpected error in SellPricesView: 'quantity'
+Non-automatic pricing for product 3; price unavailable.
+Fetched sell prices for product IDs: [3]
+Non-automatic pricing for product 2; price unavailable.
+Fetched sell prices for product IDs: [2]
+Non-automatic pricing for product 6; price unavailable.
+Fetched sell prices for product IDs: [6]
+Non-automatic pricing for product 4; price unavailable.
+Fetched sell prices for product IDs: [4]
+Non-automatic pricing for product 5; price unavailable.
+Fetched sell prices for product IDs: [5]
+Non-automatic pricing for product 39; price unavailable.
+Fetched sell prices for product IDs: [39]
+No valid cost found for product 40.
+Fetched sell prices for product IDs: [40]
+Non-automatic pricing for product 41; price unavailable.
+Fetched sell prices for product IDs: [41]
+Non-automatic pricing for product 42; price unavailable.
+Fetched sell prices for product IDs: [42]
+Non-automatic pricing for product 43; price unavailable.
+Returning cached sell price for product 7: None
+Unexpected error in SellPricesView: 'decimal.Decimal' object has no attribute 'sell_price'
+Fetched sell prices for product IDs: [43]
+Non-automatic pricing for product 44; price unavailable.
+Fetched sell prices for product IDs: [44]
+Unexpected error in SellPricesView: Product has no prices.
+Unexpected error in SellPricesView: Product has no prices.
+Unexpected error in SellPricesView: Product has no prices.
+Unexpected error in SellPricesView: Product has no prices.
+Unexpected error in SellPricesView: Product has no prices.
+Unexpected error in SellPricesView: Product has no prices.
+Returning cached sell price for product 7: 300.00
+Unexpected error in SellPricesView: 'decimal.Decimal' object has no attribute 'sell_price'
+Unexpected error in SellPricesView: Product has no prices.
+No valid cost found for product 40.
+Fetched sell prices for product IDs: [40]
+Unexpected error in SellPricesView: Product has no prices.
+Unexpected error in SellPricesView: Product has no prices.
+Unexpected error in SellPricesView: Product has no prices.
+Unexpected error in SellPricesView: Product has no prices.
+Unexpected error in SellPricesView: Product has no prices.
+Unexpected error in SellPricesView: Product has no prices.
+Unexpected error in SellPricesView: Product has no prices.
+Unexpected error in SellPricesView: Product has no prices.
+Unexpected error in SellPricesView: Product has no prices.
+Returning cached sell price for product 7: 300.00
+Unexpected error in SellPricesView: 'decimal.Decimal' object has no attribute 'sell_price'
+Unexpected error in SellPricesView: Product has no prices.
+No valid cost found for product 40.
+Fetched sell prices for product IDs: [40]
+Unexpected error in SellPricesView: Product has no prices.
+Unexpected error in SellPricesView: Product has no prices.
+Unexpected error in SellPricesView: Product has no prices.
+Unexpected error in SellPricesView: Product has no prices.
+Returning cached sell price for product 7: 300.00
+Unexpected error in SellPricesView: 'decimal.Decimal' object has no attribute 'sell_price'
+Returning cached sell price for product 7: 300.00
+Fetched sell prices for product IDs: [7]
+Fetched details for Digi-Key part 5625-OM3PGP4512Q-A0-ND.
+Unexpected error in SellPricesView: 'quantity'
+Fetched details for Digi-Key part 5625-OM3PGP4512Q-A0-ND.
+Unexpected error in SellPricesView: 'quantity'
+Unexpected error in SellPricesView: Product has no prices.
+Unexpected error in SellPricesView: Product has no prices.
+Unexpected error in SellPricesView: Product has no prices.
+Unexpected error in SellPricesView: Product has no prices.
+Returning cached sell price for product 7: 300.00
+Fetched sell prices for product IDs: [7]
+Unexpected error in SellPricesView: Product has no prices.
+Unexpected error in SellPricesView: Product has no prices.
+No valid cost found for product 40.
+Fetched sell prices for product IDs: [40]
+Unexpected error in SellPricesView: Product has no prices.
+Unexpected error in SellPricesView: Product has no prices.
+Unexpected error in SellPricesView: Product has no prices.
+Unexpected error in SellPricesView: Product has no prices.
+Fetched details for Digi-Key part 5625-OM3PGP4512Q-A0-ND.
+Invalid sell price returned for product 45: 105.85
+Fetched sell prices for product IDs: [45]
+Fetched details for Digi-Key part 5625-OM3PGP4512Q-A0-ND.
+Invalid sell price returned for product 45: 105.85
+Fetched sell prices for product IDs: [45]
+Fetched details for Digi-Key part 5625-OM3PGP4512Q-A0-ND.
+Invalid sell price returned for product 45:  Decimal -> 105.85
+Fetched sell prices for product IDs: [45]
+Unexpected error in SellPricesView: Product has no prices.
+Unexpected error in SellPricesView: Product has no prices.
+Unexpected error in SellPricesView: Product has no prices.
+Unexpected error in SellPricesView: Product has no prices.
+Unexpected error in SellPricesView: Product has no prices.
+Unexpected error in SellPricesView: Product has no prices.
+No valid cost found for product 40.
+Fetched sell prices for product IDs: [40]
+Unexpected error in SellPricesView: Product has no prices.
+Unexpected error in SellPricesView: Product has no prices.
+Returning cached sell price for product 7: 300.00
+Fetched sell prices for product IDs: [7]
+Unexpected error in SellPricesView: Product has no prices.
+Unexpected error in SellPricesView: Product has no prices.
+No price records for this product 4.
+Fetched sell prices for product IDs: [4]
+No price records for this product 3.
+No price records for this product 2.
+Fetched sell prices for product IDs: [3]
+Fetched sell prices for product IDs: [2]
+No price records for this product 5.
+Fetched sell prices for product IDs: [5]
+No price records for this product 39.
+Fetched sell prices for product IDs: [39]
+No valid cost found for product 40.
+Fetched sell prices for product IDs: [40]
+No price records for this product 41.
+Fetched sell prices for product IDs: [41]
+No price records for this product 42.
+No price records for this product 43.
+Fetched sell prices for product IDs: [42]
+Fetched sell prices for product IDs: [43]
+Returning cached sell price for product 7: 300.00
+No price records for this product 6.
+Fetched sell prices for product IDs: [7]
+Fetched sell prices for product IDs: [6]
+No price records for this product 44.
+Fetched sell prices for product IDs: [44]
+Fetched details for Digi-Key part 5625-OM3PGP4512Q-A0-ND.
+Updated sell price for product 45: 105.85
+Fetched sell prices for product IDs: [45]
+No price records for this product 3.
+Fetched sell prices for product IDs: [3]
+No price records for this product 4.
+Fetched sell prices for product IDs: [4]
+No price records for this product 2.
+Fetched sell prices for product IDs: [2]
+No price records for this product 5.
+Fetched sell prices for product IDs: [5]
+No price records for this product 6.
+Fetched sell prices for product IDs: [6]
+Returning cached sell price for product 7: 300.00
+Fetched sell prices for product IDs: [7]
+No price records for this product 39.
+Fetched sell prices for product IDs: [39]
+No price records for this product 44.
+Fetched sell prices for product IDs: [44]
+No valid cost found for product 40.
+Fetched sell prices for product IDs: [40]
+No price records for this product 42.
+Fetched sell prices for product IDs: [42]
+No price records for this product 43.
+Fetched sell prices for product IDs: [43]
+No price records for this product 41.
+Fetched sell prices for product IDs: [41]
+Returning cached sell price for product 45: 105.85
+Fetched sell prices for product IDs: [45]
+Returning cached sell price for product 45: 105.85
+Fetched sell prices for product IDs: [45]
+Returning cached sell price for product 45: 105.85
+Fetched sell prices for product IDs: [45]
+Fetched details for Digi-Key part 5625-OM3PGP4512Q-A0-ND.
+Updated sell price for product 45: 114.67
+Fetched sell prices for product IDs: [45]
+No price records for this product 41.
+Fetched sell prices for product IDs: [41]
+No price records for this product 5.
+Fetched sell prices for product IDs: [5]
+No price records for this product 42.
+Fetched sell prices for product IDs: [42]
+ERPNext request failed (attempt 1/3): HTTPConnectionPool(host='localhost', port=8080): Max retries exceeded with url: /api/resource/Customer?fields=%5B%22name%22%2C+%22customer_name%22%2C+%22email_id%22%5D&filters=%5B%5B%22Customer%22%2C+%22email_id%22%2C+%22%3D%22%2C+%22dietz.cameron%40gmail.com%22%5D%5D&limit=1 (Caused by NewConnectionError('<urllib3.connection.HTTPConnection object at 0x00000240D0B4D940>: Failed to establish a new connection: [WinError 10061] No connection could be made because the target machine actively refused it')); retrying in 0.75s
+ERPNext request failed (attempt 2/3): HTTPConnectionPool(host='localhost', port=8080): Max retries exceeded with url: /api/resource/Customer?fields=%5B%22name%22%2C+%22customer_name%22%2C+%22email_id%22%5D&filters=%5B%5B%22Customer%22%2C+%22email_id%22%2C+%22%3D%22%2C+%22dietz.cameron%40gmail.com%22%5D%5D&limit=1 (Caused by NewConnectionError('<urllib3.connection.HTTPConnection object at 0x00000240D0B6BB10>: Failed to establish a new connection: [WinError 10061] No connection could be made because the target machine actively refused it')); retrying in 1.50s
+No price records for this product 3.
+Fetched sell prices for product IDs: [3]
+No price records for this product 4.
+Fetched sell prices for product IDs: [4]
+No price records for this product 2.
+Fetched sell prices for product IDs: [2]
+No price records for this product 6.
+Fetched sell prices for product IDs: [6]
+Non-automatic pricing for product 7; price unavailable.
+Fetched sell prices for product IDs: [7]
+No price records for this product 39.
+Fetched sell prices for product IDs: [39]
+No price records for this product 43.
+Fetched sell prices for product IDs: [43]
+No valid cost found for product 40.
+Fetched sell prices for product IDs: [40]
+No price records for this product 42.
+Fetched sell prices for product IDs: [42]
+No price records for this product 41.
+Fetched sell prices for product IDs: [41]
+No price records for this product 5.
+Fetched sell prices for product IDs: [5]
+No price records for this product 44.
+Fetched sell prices for product IDs: [44]
+No price records for this product 2.
+Fetched sell prices for product IDs: [2]
+No price records for this product 4.
+Fetched sell prices for product IDs: [4]
+No price records for this product 3.
+Fetched sell prices for product IDs: [3]
+No price records for this product 5.
+Fetched sell prices for product IDs: [5]
+Non-automatic pricing for product 7; price unavailable.
+Fetched sell prices for product IDs: [7]
+No valid cost found for product 40.
+Fetched sell prices for product IDs: [40]
+No price records for this product 6.
+Fetched sell prices for product IDs: [6]
+No price records for this product 41.
+Fetched sell prices for product IDs: [41]
+No price records for this product 43.
+Fetched sell prices for product IDs: [43]
+No price records for this product 44.
+Fetched sell prices for product IDs: [44]
+No price records for this product 42.
+Fetched sell prices for product IDs: [42]
+No price records for this product 39.
+Fetched sell prices for product IDs: [39]
+Fetched details for Digi-Key part 5625-OM3PGP4512Q-A0-ND.
+Updated sell price for product 45: 114.67
+Fetched sell prices for product IDs: [45]
+No price records for this product 6.
+Fetched sell prices for product IDs: [6]
+No price records for this product 4.
+Fetched sell prices for product IDs: [4]
+Non-automatic pricing for product 7; price unavailable.
+Fetched sell prices for product IDs: [7]
+No price records for this product 2.
+Fetched sell prices for product IDs: [2]
+No price records for this product 5.
+No price records for this product 3.
+Fetched sell prices for product IDs: [5]
+Fetched sell prices for product IDs: [3]
+No price records for this product 39.
+Fetched sell prices for product IDs: [39]
+No price records for this product 42.
+Fetched sell prices for product IDs: [42]
+No price records for this product 43.
+Fetched sell prices for product IDs: [43]
+No price records for this product 44.
+Fetched sell prices for product IDs: [44]
+No price records for this product 41.
+Fetched sell prices for product IDs: [41]
+No valid cost found for product 40.
+Fetched sell prices for product IDs: [40]
+No price records for this product 3.
+No price records for this product 2.
+Fetched sell prices for product IDs: [3]
+Fetched sell prices for product IDs: [2]
+No price records for this product 4.
+Fetched sell prices for product IDs: [4]
+No price records for this product 6.
+Fetched sell prices for product IDs: [6]
+No price records for this product 5.
+Fetched sell prices for product IDs: [5]
+No price records for this product 39.
+Fetched sell prices for product IDs: [39]
+No price records for this product 41.
+Fetched sell prices for product IDs: [41]
+No valid cost found for product 40.
+Fetched sell prices for product IDs: [40]
+No price records for this product 42.
+Fetched sell prices for product IDs: [42]
+No price records for this product 43.
+Fetched sell prices for product IDs: [43]
+Non-automatic pricing for product 7; price unavailable.
+Fetched sell prices for product IDs: [7]
+No price records for this product 44.
+Fetched sell prices for product IDs: [44]
+No price records for this product 3.
+No price records for this product 2.
+Fetched sell prices for product IDs: [3]
+Fetched sell prices for product IDs: [2]
+No price records for this product 5.
+Fetched sell prices for product IDs: [5]
+No price records for this product 4.
+Fetched sell prices for product IDs: [4]
+No price records for this product 6.
+Fetched sell prices for product IDs: [6]
+Non-automatic pricing for product 7; price unavailable.
+Fetched sell prices for product IDs: [7]
+No price records for this product 39.
+Fetched sell prices for product IDs: [39]
+No valid cost found for product 40.
+Fetched sell prices for product IDs: [40]
+No price records for this product 41.
+Fetched sell prices for product IDs: [41]
+No price records for this product 43.
+Fetched sell prices for product IDs: [43]
+No price records for this product 42.
+Fetched sell prices for product IDs: [42]
+No price records for this product 44.
+Fetched sell prices for product IDs: [44]
+No price records for this product 2.
+Fetched sell prices for product IDs: [2]
+No price records for this product 3.
+Fetched sell prices for product IDs: [3]
+No price records for this product 5.
+Fetched sell prices for product IDs: [5]
+No price records for this product 4.
+Fetched sell prices for product IDs: [4]
+No price records for this product 6.
+Fetched sell prices for product IDs: [6]
+Non-automatic pricing for product 7; price unavailable.
+Fetched sell prices for product IDs: [7]
+No price records for this product 39.
+Fetched sell prices for product IDs: [39]
+No valid cost found for product 40.
+Fetched sell prices for product IDs: [40]
+No price records for this product 42.
+Fetched sell prices for product IDs: [42]
+No price records for this product 41.
+Fetched sell prices for product IDs: [41]
+No price records for this product 43.
+Fetched sell prices for product IDs: [43]
+No price records for this product 44.
+Fetched sell prices for product IDs: [44]
+No price records for this product 2.
+Fetched sell prices for product IDs: [2]
+No price records for this product 3.
+Fetched sell prices for product IDs: [3]
+No price records for this product 5.
+No price records for this product 4.
+Fetched sell prices for product IDs: [5]
+Fetched sell prices for product IDs: [4]
+No price records for this product 6.
+Fetched sell prices for product IDs: [6]
+Non-automatic pricing for product 7; price unavailable.
+Fetched sell prices for product IDs: [7]
+No price records for this product 39.
+Fetched sell prices for product IDs: [39]
+No valid cost found for product 40.
+Fetched sell prices for product IDs: [40]
+No price records for this product 41.
+Fetched sell prices for product IDs: [41]
+No price records for this product 42.
+Fetched sell prices for product IDs: [42]
+No price records for this product 43.
+Fetched sell prices for product IDs: [43]
+No price records for this product 44.
+Fetched sell prices for product IDs: [44]
+No price records for this product 3.
+Fetched sell prices for product IDs: [3]
+No price records for this product 3.
+Fetched sell prices for product IDs: [3]
+No price records for this product 3.
+Fetched sell prices for product IDs: [3]
+No price records for this product 3.
+Fetched sell prices for product IDs: [3]
+No price records for this product 3.
+Fetched sell prices for product IDs: [3]
+No price records for this product 3.
+Fetched sell prices for product IDs: [3]
+No price records for this product 2.
+No price records for this product 3.
+Fetched sell prices for product IDs: [2]
+Fetched sell prices for product IDs: [3]
+No price records for this product 5.
+Fetched sell prices for product IDs: [5]
+No price records for this product 4.
+Fetched sell prices for product IDs: [4]
+No price records for this product 6.
+Fetched sell prices for product IDs: [6]
+Non-automatic pricing for product 7; price unavailable.
+Fetched sell prices for product IDs: [7]
+No price records for this product 39.
+Fetched sell prices for product IDs: [39]
+No price records for this product 43.
+Fetched sell prices for product IDs: [43]
+No price records for this product 41.
+Fetched sell prices for product IDs: [41]
+No price records for this product 42.
+Fetched sell prices for product IDs: [42]
+No price records for this product 44.
+Fetched sell prices for product IDs: [44]
+No price records for this product 3.
+Fetched sell prices for product IDs: [3]
+No valid cost found for product 40.
+Fetched sell prices for product IDs: [40]
+No price records for this product 2.
+Fetched sell prices for product IDs: [2]
+No price records for this product 5.
+Fetched sell prices for product IDs: [5]
+No price records for this product 4.
+Fetched sell prices for product IDs: [4]
+No price records for this product 39.
+Fetched sell prices for product IDs: [39]
+No price records for this product 6.
+No price records for this product 43.
+Fetched sell prices for product IDs: [6]
+Fetched sell prices for product IDs: [43]
+No price records for this product 41.
+Fetched sell prices for product IDs: [41]
+No price records for this product 42.
+Fetched sell prices for product IDs: [42]
+No price records for this product 44.
+Fetched sell prices for product IDs: [44]
+No valid cost found for product 40.
+Fetched sell prices for product IDs: [40]
+Non-automatic pricing for product 7; price unavailable.
+Fetched sell prices for product IDs: [7]
+No price records for this product 2.
+Fetched sell prices for product IDs: [2]
+No price records for this product 2.
+Fetched sell prices for product IDs: [2]
+No price records for this product 4.
+Fetched sell prices for product IDs: [4]
+No price records for this product 5.
+Fetched sell prices for product IDs: [5]
+No price records for this product 2.
+Fetched sell prices for product IDs: [2]
+Non-automatic pricing for product 7; price unavailable.
+Fetched sell prices for product IDs: [7]
+No price records for this product 39.
+Fetched sell prices for product IDs: [39]
+No price records for this product 3.
+Fetched sell prices for product IDs: [3]
+No price records for this product 41.
+Fetched sell prices for product IDs: [41]
+No price records for this product 6.
+Fetched sell prices for product IDs: [6]
+No price records for this product 43.
+Fetched sell prices for product IDs: [43]
+No price records for this product 44.
+Fetched sell prices for product IDs: [44]
+No price records for this product 4.
+Fetched sell prices for product IDs: [4]
+No valid cost found for product 40.
+Fetched sell prices for product IDs: [40]
+No price records for this product 5.
+Fetched sell prices for product IDs: [5]
+No price records for this product 42.
+Fetched sell prices for product IDs: [42]
+No price records for this product 2.
+Fetched sell prices for product IDs: [2]
+Non-automatic pricing for product 7; price unavailable.
+Fetched sell prices for product IDs: [7]
+No price records for this product 39.
+Fetched sell prices for product IDs: [39]
+No price records for this product 3.
+Fetched sell prices for product IDs: [3]
+No price records for this product 41.
+Fetched sell prices for product IDs: [41]
+No price records for this product 6.
+Fetched sell prices for product IDs: [6]
+No price records for this product 43.
+Fetched sell prices for product IDs: [43]
+No price records for this product 44.
+Fetched sell prices for product IDs: [44]
+No price records for this product 42.
+Fetched sell prices for product IDs: [42]
+No valid cost found for product 40.
+Fetched sell prices for product IDs: [40]
+No price records for this product 3.
+Fetched sell prices for product IDs: [3]
+No price records for this product 2.
+Fetched sell prices for product IDs: [2]
+No price records for this product 5.
+Fetched sell prices for product IDs: [5]
+No price records for this product 4.
+Fetched sell prices for product IDs: [4]
+No price records for this product 6.
+Fetched sell prices for product IDs: [6]
+No price records for this product 39.
+Fetched sell prices for product IDs: [39]
+No price records for this product 43.
+Fetched sell prices for product IDs: [43]
+No price records for this product 41.
+Fetched sell prices for product IDs: [41]
+No price records for this product 42.
+Fetched sell prices for product IDs: [42]
+No valid cost found for product 40.
+Fetched sell prices for product IDs: [40]
+No price records for this product 44.
+Fetched sell prices for product IDs: [44]
+Non-automatic pricing for product 7; price unavailable.
+Fetched sell prices for product IDs: [7]
+No price records for this product 3.
+Fetched sell prices for product IDs: [3]
+No price records for this product 2.
+Fetched sell prices for product IDs: [2]
+No price records for this product 5.
+Fetched sell prices for product IDs: [5]
+No price records for this product 4.
+Fetched sell prices for product IDs: [4]
+No price records for this product 6.
+Fetched sell prices for product IDs: [6]
+No price records for this product 39.
+Fetched sell prices for product IDs: [39]
+No price records for this product 43.
+Fetched sell prices for product IDs: [43]
+No price records for this product 41.
+Fetched sell prices for product IDs: [41]
+No price records for this product 42.
+Fetched sell prices for product IDs: [42]
+No valid cost found for product 40.
+Fetched sell prices for product IDs: [40]
+No price records for this product 44.
+Fetched sell prices for product IDs: [44]
+Non-automatic pricing for product 7; price unavailable.
+Fetched sell prices for product IDs: [7]
+No price records for this product 3.
+Fetched sell prices for product IDs: [3]
+No price records for this product 4.
+Fetched sell prices for product IDs: [4]
+No price records for this product 2.
+Fetched sell prices for product IDs: [2]
+No price records for this product 6.
+Fetched sell prices for product IDs: [6]
+No price records for this product 5.
+Fetched sell prices for product IDs: [5]
+Non-automatic pricing for product 7; price unavailable.
+Fetched sell prices for product IDs: [7]
+No price records for this product 41.
+Fetched sell prices for product IDs: [41]
+No valid cost found for product 40.
+Fetched sell prices for product IDs: [40]
+No price records for this product 42.
+Fetched sell prices for product IDs: [42]
+No price records for this product 39.
+Fetched sell prices for product IDs: [39]
+No price records for this product 43.
+Fetched sell prices for product IDs: [43]
+No price records for this product 2.
+Fetched sell prices for product IDs: [2]
+No price records for this product 4.
+Fetched sell prices for product IDs: [4]
+No price records for this product 6.
+Fetched sell prices for product IDs: [6]
+No price records for this product 3.
+Fetched sell prices for product IDs: [3]
+No price records for this product 44.
+Fetched sell prices for product IDs: [44]
+No price records for this product 5.
+Fetched sell prices for product IDs: [5]
+Non-automatic pricing for product 7; price unavailable.
+Fetched sell prices for product IDs: [7]
+No price records for this product 39.
+Fetched sell prices for product IDs: [39]
+No price records for this product 42.
+Fetched sell prices for product IDs: [42]
+No valid cost found for product 40.
+Fetched sell prices for product IDs: [40]
+No price records for this product 41.
+Fetched sell prices for product IDs: [41]
+No price records for this product 44.
+Fetched sell prices for product IDs: [44]
+No price records for this product 43.
+Fetched sell prices for product IDs: [43]
+No price records for this product 39.
+Fetched sell prices for product IDs: [39]
+No price records for this product 39.
+Fetched sell prices for product IDs: [39]
+No price records for this product 39.
+Fetched sell prices for product IDs: [39]
+No price records for this product 39.
+Fetched sell prices for product IDs: [39]
+No price records for this product 6.
+Fetched sell prices for product IDs: [6]
+No price records for this product 4.
+Fetched sell prices for product IDs: [4]
+No price records for this product 2.
+Fetched sell prices for product IDs: [2]
+No price records for this product 5.
+Fetched sell prices for product IDs: [5]
+Non-automatic pricing for product 7; price unavailable.
+Fetched sell prices for product IDs: [7]
+No price records for this product 39.
+Fetched sell prices for product IDs: [39]
+No valid cost found for product 40.
+Fetched sell prices for product IDs: [40]
+No price records for this product 42.
+Fetched sell prices for product IDs: [42]
+No price records for this product 3.
+Fetched sell prices for product IDs: [3]
+No price records for this product 43.
+Fetched sell prices for product IDs: [43]
+No price records for this product 44.
+Fetched sell prices for product IDs: [44]
+No price records for this product 41.
+Fetched sell prices for product IDs: [41]
+No price records for this product 4.
+Fetched sell prices for product IDs: [4]
+No price records for this product 2.
+Fetched sell prices for product IDs: [2]
+No price records for this product 5.
+Fetched sell prices for product IDs: [5]
+Non-automatic pricing for product 7; price unavailable.
+Fetched sell prices for product IDs: [7]
+No price records for this product 39.
+Fetched sell prices for product IDs: [39]
+No price records for this product 42.
+Fetched sell prices for product IDs: [42]
+No price records for this product 6.
+Fetched sell prices for product IDs: [6]
+No valid cost found for product 40.
+Fetched sell prices for product IDs: [40]
+No price records for this product 3.
+Fetched sell prices for product IDs: [3]
+No price records for this product 44.
+Fetched sell prices for product IDs: [44]
+No price records for this product 41.
+Fetched sell prices for product IDs: [41]
+No price records for this product 43.
+Fetched sell prices for product IDs: [43]
+No price records for this product 3.
+Fetched sell prices for product IDs: [3]
+No price records for this product 2.
+Fetched sell prices for product IDs: [2]
+No price records for this product 4.
+Fetched sell prices for product IDs: [4]
+No price records for this product 6.
+Fetched sell prices for product IDs: [6]
+No price records for this product 39.
+Fetched sell prices for product IDs: [39]
+No price records for this product 5.
+Fetched sell prices for product IDs: [5]
+No price records for this product 41.
+Fetched sell prices for product IDs: [41]
+No valid cost found for product 40.
+Fetched sell prices for product IDs: [40]
+No price records for this product 42.
+Fetched sell prices for product IDs: [42]
+No price records for this product 43.
+Fetched sell prices for product IDs: [43]
+No price records for this product 44.
+Fetched sell prices for product IDs: [44]
+Non-automatic pricing for product 7; price unavailable.
+Fetched sell prices for product IDs: [7]
+No price records for this product 3.
+Fetched sell prices for product IDs: [3]
+No price records for this product 2.
+Fetched sell prices for product IDs: [2]
+No price records for this product 4.
+Fetched sell prices for product IDs: [4]
+No price records for this product 6.
+Fetched sell prices for product IDs: [6]
+No price records for this product 39.
+Fetched sell prices for product IDs: [39]
+No price records for this product 5.
+Fetched sell prices for product IDs: [5]
+No price records for this product 41.
+Fetched sell prices for product IDs: [41]
+No price records for this product 42.
+Fetched sell prices for product IDs: [42]
+No valid cost found for product 40.
+Fetched sell prices for product IDs: [40]
+No price records for this product 43.
+Fetched sell prices for product IDs: [43]
+No price records for this product 44.
+Fetched sell prices for product IDs: [44]
+Non-automatic pricing for product 7; price unavailable.
+Fetched sell prices for product IDs: [7]

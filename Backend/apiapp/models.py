@@ -2,6 +2,7 @@ import sys
 from django.utils.timezone import now
 from django.contrib.auth.models import User
 from django.contrib.postgres.fields import ArrayField
+from django.core.validators import MinValueValidator
 try:
     from django.db import models
 except Exception:
@@ -45,6 +46,7 @@ class Category(models.Model):
     parent_category = models.ForeignKey('self', null=True, blank=True, on_delete=models.CASCADE, related_name='subcategories')
     is_visible = models.BooleanField(default=False, blank=False, null=False)
     image = models.ImageField(upload_to='category_images/', blank=True, null=True)
+    margin = models.DecimalField(max_digits=5, decimal_places=2, null=True, blank=True)  # e.g., 20.00 for 20% margin
     def __str__(self):
         return self.name
     class Meta:
@@ -96,7 +98,7 @@ class Meta:
 class Product(models.Model):
     name = models.CharField(max_length=255)
     description = models.TextField(blank=True, null=True)
-    price = models.DecimalField(max_digits=10, decimal_places=2)  # Base retail price
+    price = models.DecimalField(max_digits=10, decimal_places=2)  # Base retail price TO BE DEPRECATED
     stock = models.PositiveIntegerField()
     category = models.ForeignKey(Category, on_delete=models.SET_NULL, null=True, blank=True)
     image = models.ImageField(upload_to='products/', blank=True, null=True)
@@ -105,10 +107,51 @@ class Product(models.Model):
     created_at = models.DateTimeField(auto_now_add=True)
     is_visible = models.BinaryField(blank=True, null=True, default=False)
     is_auto = models.BinaryField(blank=True, null=True, default=False)
+    weight = models.PositiveIntegerField(null=True, blank=True, help_text="Weight in Lbs")
+
 
     def __str__(self):
         return self.name
+class ProductPrice(models.Model):
+    product = models.OneToOneField(Product, on_delete=models.CASCADE, related_name='prices')
+    sell_price = models.DecimalField(max_digits=10, decimal_places=2, null=True, blank=True)
+    valid_until = models.DateTimeField(null=True, blank=True)
+    method = models.CharField(max_length=50, null=True, blank=True)  # e.g., 'automatic', 'manual'
+    created_at = models.DateTimeField(auto_now_add=True, null=True, blank=True)
+    is_automatic = models.BooleanField(default=False, null=True, blank=True)  # Auto-fetch if True
+    custom_margin = models.DecimalField(max_digits=5, decimal_places=2, null=True, blank=True)  # e.g., 25.00 for 25%
+    is_discountable = models.BooleanField(default=True, null=True, blank=True)  # Eligible for user discounts
 
+    class Meta:
+        indexes = [
+            models.Index(fields=['product', 'valid_until']),
+        ]
+
+class QuoteRequest(models.Model):
+    STATUS_CHOICES = (
+        ('pending', 'Pending'),
+        ('processed', 'Processed'),
+        ('rejected', 'Rejected'),
+    )
+
+    name = models.CharField(max_length=255)
+    email = models.EmailField()
+    phone = models.CharField(max_length=20, blank=True, null=True)
+    product = models.ForeignKey('Product', on_delete=models.SET_NULL, null=True, blank=True)
+    custom_pn = models.CharField(max_length=100, blank=True, null=True)
+    quantity = models.IntegerField(validators=[MinValueValidator(1)])
+    notes = models.TextField(blank=True, null=True)
+    status = models.CharField(max_length=20, choices=STATUS_CHOICES, default='pending')
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
+    user = models.ForeignKey(User, on_delete=models.SET_NULL, null=True, blank=True)
+
+    class Meta:
+        verbose_name = "Quote Request"
+        verbose_name_plural = "Quote Requests"
+
+    def __str__(self):
+        return f"Quote Request #{self.id} - {self.name}"
 
 # Orders & Payments
 class Order(models.Model):

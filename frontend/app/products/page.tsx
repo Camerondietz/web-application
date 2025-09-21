@@ -28,7 +28,7 @@ export default function Page() {
 
 function ProductsPage() {
   const searchParams = useSearchParams();
-  const router = useRouter();
+  //const router = useRouter();
 
   const [products, setProducts] = useState<Product[]>([]);
   const [loading, setLoading] = useState<boolean>(true);
@@ -122,11 +122,11 @@ function ProductsPage() {
       >
         {products.length > 0 ? (
           products.map((product) => (
-            <Link key={product.id} href={`/products/${product.id}`} passHref>
-              <motion.div 
-                className="bg-gray-100 dark:bg-gray-800 overflow-hidden shadow-lg rounded-xl p-4 cursor-pointer hover:shadow-2xl transition duration-300"
-                whileHover={{ scale: 1.05 }}
-              >
+            <motion.div 
+              className="bg-gray-100 dark:bg-gray-800 overflow-hidden shadow-lg rounded-xl p-4 cursor-pointer hover:shadow-2xl transition duration-300"
+              whileHover={{ scale: 1.05 }}
+            >
+              <Link key={product.id} href={`/products/${product.id}`} passHref>
                 <img
                   src={product.image ? `${process.env.NEXT_PUBLIC_API_URL}${product.image}` : "@/public/placeholder.jpg"} // Handle missing images
                   alt={product.name || "No Name"}
@@ -134,9 +134,9 @@ function ProductsPage() {
                 />
                 <h2 className="mt-3 text-lg break-words font-semibold">{product.name || "Unnamed Product"}</h2>
                 <p className="text-gray-700 dark:text-gray-300 text-sm">{product.category?.name || "No Category"}</p>
-                <PriceLoader productId={product.id} />
-              </motion.div>
-            </Link>
+              </Link>
+                <PriceLoader productId={product.id}/>
+            </motion.div>
           ))
         ) : (
           <p className="text-center text-gray-700 dark:text-gray-300">No products found.</p>

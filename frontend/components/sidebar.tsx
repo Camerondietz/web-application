@@ -109,8 +109,9 @@ useEffect(() => {
               { name: "Home", path: "/" },
               { name: "Products", path: "/products" },
               { name: "Cart", path: "/cart" },
-              { name: "Account", path: "/account" },
               { name: "AI Tool", path: "/resources/get-help" },
+              { name: "Orders", path: "/account/orders" },
+              { name: "Account", path: "/account" },
               { name: "Resources", path: "/resources" },
               { name: "About Us", path: "/about" },
               { name: "Contact", path: "/contact" }

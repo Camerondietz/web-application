@@ -1,6 +1,8 @@
 'use client';
 
 import { useState, useEffect } from 'react';
+import {useRouter } from "next/navigation";
+
 
 interface PriceLoaderProps {
   productId: number;
@@ -10,6 +12,7 @@ const PriceLoader: React.FC<PriceLoaderProps> = ({ productId }) => {
   const [price, setPrice] = useState<number | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
+  const router = useRouter();
 
   useEffect(() => {
     const fetchPrice = async () => {
@@ -18,9 +21,7 @@ const PriceLoader: React.FC<PriceLoaderProps> = ({ productId }) => {
 
       try {
         const response = await fetch(
-          `${process.env.NEXT_PUBLIC_API_URL}/api/PricesView/?product_ids=${productId}`,
-          {
-          }
+          `${process.env.NEXT_PUBLIC_API_URL}/api/PricesView/?product_ids=${productId}`
         );
 
         if (!response.ok) {
@@ -42,7 +43,7 @@ const PriceLoader: React.FC<PriceLoaderProps> = ({ productId }) => {
     };
 
     fetchPrice();
-  }, [productId]);
+  }, [productId, router]);
 
   if (loading) {
     return (
@@ -57,9 +58,18 @@ const PriceLoader: React.FC<PriceLoaderProps> = ({ productId }) => {
   }
 
   return (
+    <div onClick={(e) => e.stopPropagation()}>
     <span className="text-xl font-bold text-gray-700 dark:text-gray-300">
-      {price !== null ? `$${price.toFixed(2)}` : 'Unavailable'}
+      {price !== null ? `$${price.toFixed(2)}` : (
+        <a
+          href={`/quote-request?product_id=${productId}`}
+          className="text-blue-500 hover:underline"
+        >
+          Request Quote
+        </a>
+      )}
     </span>
+    </div>
   );
 };
 

@@ -55,7 +55,7 @@ export default function OrdersPage() {
           {orders.map((order) => (
             <Link
               key={order.name}
-              href={`/orders/${order.name}`}
+              href={`/account/orders/${order.name}`}
               className="block border border-gray-300 dark:border-gray-700 rounded-lg p-4 hover:bg-gray-100 dark:hover:bg-gray-800 transition"
             >
               <div className="flex justify-between items-center">

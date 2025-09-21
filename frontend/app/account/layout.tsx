@@ -6,7 +6,7 @@ import React from 'react';
 
 const accountLinks = [
   { name: 'Account Details', href: '/account' },
-  { name: 'Orders', href: '/orders' },
+  { name: 'Orders', href: '/account/orders' },
   { name: 'Addresses', href: '/account/addresses' },
 ];
 
