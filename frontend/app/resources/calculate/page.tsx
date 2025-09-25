@@ -72,42 +72,34 @@ export default function CalculatePage() {
 
       {/* Placeholder for additional calculators */}
       <div className="bg-gray-100 dark:bg-gray-800 shadow-lg rounded-lg p-6 mb-6">
-        <h2 className="text-xl font-bold mb-4">Resistor Color Code Calculator</h2>
         <ResistorColorCodeCalculator />
       </div>
 
       <div className="bg-gray-100 dark:bg-gray-800 shadow-lg rounded-lg p-6 mb-6">
-        <h2 className="text-xl font-bold mb-4">Voltage Divider Calculator</h2>
         <VoltageDividerCalculator />
       </div>
 
       <div className="bg-gray-100 dark:bg-gray-800 shadow-lg rounded-lg p-6 mb-6">
-        <h2 className="text-xl font-bold mb-4">Capacitor Value Calculator</h2>
         <CapacitorValueCalculator />
       </div>
 
       <div className="bg-gray-100 dark:bg-gray-800 shadow-lg rounded-lg p-6 mb-6">
-        <h2 className="text-xl font-bold mb-4">Inductor Selection</h2>
         <InductorSelectionCalculator />
         </div>
 
       <div className="bg-gray-100 dark:bg-gray-800 shadow-lg rounded-lg p-6 mb-6">
-        <h2 className="text-xl font-bold mb-4">Power Dissipation Calculator</h2>
         <PowerDissipationCalculator />
         </div>
 
       <div className="bg-gray-100 dark:bg-gray-800 shadow-lg rounded-lg p-6 mb-6">
-        <h2 className="text-xl font-bold mb-4">Wire Gauge Selector</h2>
         <WireGaugeSelector />
         </div>
 
       <div className="bg-gray-100 dark:bg-gray-800 shadow-lg rounded-lg p-6 mb-6">
-        <h2 className="text-xl font-bold mb-4">Thermal Resistance Calculator</h2>
         <ThermalResistanceCalculator />
         </div>
 
       <div className="bg-gray-100 dark:bg-gray-800 shadow-lg rounded-lg p-6 mb-6">
-        <h2 className="text-xl font-bold mb-4">Frequency Calculator</h2>
         <FrequencyCalculator />
         </div>
     </div>

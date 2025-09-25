@@ -29,6 +29,7 @@ export async function POST(req: Request) {
       return NextResponse.json({
         clientSecret: data.clientSecret,
         cart: data.cart,
+        shipping_cost: data.shipping_cost,
       });
     } else {
       console.error('Django backend error:', data);

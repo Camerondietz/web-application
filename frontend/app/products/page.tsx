@@ -128,7 +128,7 @@ function ProductsPage() {
             >
               <Link key={product.id} href={`/products/${product.id}`} passHref>
                 <img
-                  src={product.image ? `${process.env.NEXT_PUBLIC_API_URL}${product.image}` : "@/public/placeholder.jpg"} // Handle missing images
+                  src={product.image ? `${process.env.NEXT_PUBLIC_API_URL}${product.image}` : "@/public/placeholder.png"} // Handle missing images
                   alt={product.name || "No Name"}
                   className="w-full h-40 object-cover rounded-lg"
                 />

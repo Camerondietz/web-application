@@ -99,19 +99,27 @@ class Product(models.Model):
     name = models.CharField(max_length=255)
     description = models.TextField(blank=True, null=True)
     price = models.DecimalField(max_digits=10, decimal_places=2)  # Base retail price TO BE DEPRECATED
-    stock = models.PositiveIntegerField()
+    stock = models.PositiveIntegerField() #To be deprecated
     category = models.ForeignKey(Category, on_delete=models.SET_NULL, null=True, blank=True)
     image = models.ImageField(upload_to='products/', blank=True, null=True)
     manufacturer = models.ForeignKey('Manufacturer', null=True, blank=True, on_delete=models.SET_NULL)
     suppliers = models.ManyToManyField('Supplier', through='ProductSupplier')
     created_at = models.DateTimeField(auto_now_add=True)
     is_visible = models.BinaryField(blank=True, null=True, default=False)
-    is_auto = models.BinaryField(blank=True, null=True, default=False)
+    is_auto = models.BinaryField(blank=True, null=True, default=False) #To be deprecated?
     weight = models.PositiveIntegerField(null=True, blank=True, help_text="Weight in Lbs")
 
 
     def __str__(self):
         return self.name
+    
+    class Meta:
+        indexes = [
+            models.Index(fields=['name']),
+            models.Index(fields=['category']),
+            models.Index(fields=['is_visible']),
+        ]
+
 class ProductPrice(models.Model):
     product = models.OneToOneField(Product, on_delete=models.CASCADE, related_name='prices')
     sell_price = models.DecimalField(max_digits=10, decimal_places=2, null=True, blank=True)
@@ -121,7 +129,8 @@ class ProductPrice(models.Model):
     is_automatic = models.BooleanField(default=False, null=True, blank=True)  # Auto-fetch if True
     custom_margin = models.DecimalField(max_digits=5, decimal_places=2, null=True, blank=True)  # e.g., 25.00 for 25%
     is_discountable = models.BooleanField(default=True, null=True, blank=True)  # Eligible for user discounts
-
+    def __str__(self):
+        return f"{self.product.name} - ${self.sell_price}"
     class Meta:
         indexes = [
             models.Index(fields=['product', 'valid_until']),
@@ -152,7 +161,14 @@ class QuoteRequest(models.Model):
 
     def __str__(self):
         return f"Quote Request #{self.id} - {self.name}"
-
+    
+class ContactUs(models.Model):
+    name = models.CharField(max_length=255, blank=True, null=True)
+    email = models.EmailField(blank=True, null=True)
+    description = models.TextField(blank=True, null=True)
+    created_at = models.DateTimeField(auto_now_add=True)
+    def __str__(self):
+        return f"Quote Request #{self.name} - {self.created_at}"
 # Orders & Payments
 class Order(models.Model):
     STATUS_CHOICES = [
@@ -169,12 +185,15 @@ class Order(models.Model):
     total_price = models.DecimalField(max_digits=10, decimal_places=2)
     created_at = models.DateTimeField(auto_now_add=True)
     # Snapshotted address fields
+    shipping_title = models.CharField(max_length=255, blank=True, null=True)
     shipping_street = models.CharField(max_length=255, blank=True, null=True)
     shipping_street2 = models.CharField(max_length=255, blank=True, null=True)
     shipping_city = models.CharField(max_length=100, blank=True, null=True)
     shipping_state = models.CharField(max_length=50, blank=True, null=True)
     shipping_zip_code = models.CharField(max_length=20, blank=True, null=True)
     shipping_country = models.CharField(max_length=50, blank=True, null=True)
+    def __str__(self):
+        return f"Order #{self.id} - {self.email or 'Guest'} - {self.status} - ${self.total_price}"
     
 class OrderItem(models.Model):
     order = models.ForeignKey(Order, on_delete=models.CASCADE)
@@ -182,7 +201,9 @@ class OrderItem(models.Model):
     product_name = models.CharField(max_length=50, null=True)
     quantity = models.PositiveIntegerField()
     price = models.DecimalField(max_digits=10, decimal_places=2)
-
+    def __str__(self):
+        return f"{self.product_name or self.product} x {self.quantity} (Order #{self.order.id})"
+    
 class Payment(models.Model):
     PAYMENT_METHODS = [
         ('Credit Card', 'Credit Card'),

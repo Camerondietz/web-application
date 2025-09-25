@@ -19,7 +19,7 @@ const CheckoutForm: React.FC = () => {
     setIsLoading(true);
 
     const confirmResult = await checkout.confirm();
-
+  
     if (confirmResult.type === 'error') {
       setMessage(confirmResult.error.message);
     }
@@ -62,6 +62,13 @@ const CheckoutForm: React.FC = () => {
     fetchAddresses();
   }, []);
 
+  useEffect(() => {
+  if (checkout) {
+    console.log("Checkout updated:", checkout);
+    console.dir(checkout, { depth: null });
+  }
+}, [checkout]);
+
 
   return (
     <form onSubmit={handleSubmit} className="w-full bg-gray-100 dark:bg-gray-800 text-gray-700 dark:text-gray-400 p-6 rounded shadow">
@@ -75,6 +82,18 @@ const CheckoutForm: React.FC = () => {
       <div className="mb-6">
         <PaymentElement id="payment-element"/>
       </div>
+
+      {/* Show Tax */}
+      {checkout?.total?.taxExclusive.amount ? (
+        <div className="flex justify-between text-sm text-gray-700 dark:text-gray-300 mb-4">
+          <span>Tax</span>
+          <span>
+            {checkout.total.taxExclusive.amount}
+          </span>
+        </div>
+      ) : (
+        <div className="text-sm text-gray-500 mb-4">Tax will be calculated shortly</div>
+      )}
 
       <button
         type="submit"

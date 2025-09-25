@@ -5,7 +5,7 @@ export default function AboutPage() {
     <div className="container mx-auto px-4 py-10">
       {/* Main Heading */}
       <h1 className="text-3xl font-bold text-center mb-6 dark:text-white">
-        About Us
+        We keep the world moving.
       </h1>
 
       {/* Introduction Section */}

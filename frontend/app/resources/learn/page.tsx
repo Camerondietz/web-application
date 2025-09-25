@@ -1,62 +1,44 @@
-"use client";
-import { useState, useEffect } from "react";
+import Link from "next/link";
+import { Metadata } from "next";
+import { learnCategories } from "./LearnResources";
 
-const imageList = Array.from({ length: 7 }, (_, i) => `${i + 1}`);
+export const metadata: Metadata = {
+  title: "Learning Resources – Engineering, Networking & Automation",
+  description:
+    "Browse technical learning resources and reference sheets for power transmission, networking, and industrial automation.",
+  keywords: [
+    "engineering",
+    "formulas",
+    "networking",
+    "automation",
+    "mechanical design",
+    "reference sheets",
+  ],
+};
 
-export default function LearnPage() {
-  const [selectedImage, setSelectedImage] = useState("1");
-  const [svgExists, setSvgExists] = useState(true);
-
-  useEffect(() => {
-    const checkSVG = async () => {
-      try {
-        const res = await fetch(`/learn/${selectedImage}.svg`, { method: "HEAD" });
-        setSvgExists(res.ok);
-      } catch (err) {
-        setSvgExists(false);
-      }
-    };
-
-    checkSVG();
-  }, [selectedImage]);
-
+export default function LearnIndexPage() {
   return (
-    <div className="flex flex-col md:flex-row h-screen overflow-hidden">
-      {/* Sidebar */}
-      <div className="md:w-64 w-full md:h-full h-48 md:border-r border-b bg-gray-100 dark:bg-gray-900 overflow-y-auto">
-        <h2 className="text-lg font-bold p-4">Pages</h2>
-        <ul className="overflow-y-auto h-full">
-          {imageList.map((id) => (
-            <li
-              key={id}
-              onClick={() => setSelectedImage(id)}
-              className={`cursor-pointer px-4 py-2 hover:bg-gray-200 dark:hover:bg-gray-700 ${
-                selectedImage === id ? "bg-blue-500 text-white" : ""
-              }`}
-            >
-              Page {id}
-            </li>
-          ))}
-        </ul>
-      </div>
+    <main className="mx-auto max-w-6xl p-6">
+      <h1 className="text-4xl font-bold mb-8">Learning Resources</h1>
+      <p className="text-lg text-gray-700 dark:text-gray-300 mb-12">
+        Explore curated guides and formulas for engineering, networking, and
+        automation. Select a category to get started.
+      </p>
 
-      {/* Display Area */}
-      <div className="flex-1 overflow-auto flex justify-center p-4 bg-white dark:bg-black">
-        <div className="relative w-full max-w-6xl aspect-video">
-          <img
-            src={`/learn/${selectedImage}.jpg`}
-            alt={`Page ${selectedImage}`}
-            className="absolute top-0 left-0 w-full object-contain"
-          />
-          {svgExists && (
-            <object
-              data={`/learn/${selectedImage}.svg`}
-              type="image/svg+xml"
-              className="absolute top-0 left-0 w-full pointer-events-none"
-            />
-          )}
-        </div>
+      <div className="grid gap-8 md:grid-cols-2">
+        {learnCategories.map((cat) => (
+          <Link
+            key={cat.slug}
+            href={`/resources/learn/${cat.slug}`}
+            className="block p-6 rounded-2xl border border-gray-200 dark:border-gray-800 bg-white dark:bg-gray-900 shadow-sm hover:shadow-lg transition"
+          >
+            <h2 className="text-2xl font-semibold mb-2">{cat.name}</h2>
+            <p className="text-gray-600 dark:text-gray-400">
+              {cat.description}
+            </p>
+          </Link>
+        ))}
       </div>
-    </div>
+    </main>
   );
 }

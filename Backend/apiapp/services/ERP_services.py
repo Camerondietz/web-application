@@ -52,6 +52,7 @@ logger = logging.getLogger(__name__)
 
 @dataclass
 class ShipAddress:
+    name: str
     line1: str
     line2: str
     city: str
@@ -177,11 +178,26 @@ class ERPNextClient:
             return items[0]["name"]
         print("customer found by email")
         return None
+    
+    def find_customer_by_id(self, user_id: str) -> Optional[str]:
+        """Return ERPNext Customer.name if found, else None."""
+        params = {
+            "fields": json.dumps(["name", "customer_name", "email_id"]),
+            "filters": json.dumps([["Customer", "customer_name", "=", user_id]]),
+            "limit": 1,
+        }
+        data = self._request("GET", "/api/resource/Customer", params=params)
+        items = data.get("data") or data.get("message") or []
+        if items:
+            return items[0]["name"]
+        print("customer found by email")
+        return None
 
-    def create_customer(self, email: str, full_name: str, Shipaddress: ShipAddress) -> str:
+    def create_customer(self, email: str, user_id: str, Shipaddress: ShipAddress) -> str:
         payload = {
             "customer_type": "Individual",
-            "customer_name": full_name or email,
+            "customer_name": user_id,
+            #"customer_group": "Website",
             "email_id": email,
         }
         created = self._request("POST", "/api/resource/Customer", json_body=payload)
@@ -191,7 +207,7 @@ class ERPNextClient:
 
         # Create a primary Address and link to Customer
         addr_payload = {
-            "address_title": full_name or email,
+            "address_title": Shipaddress.name or email,
             "address_line1": Shipaddress.line1,
             "address_line2": Shipaddress.line2,
             "city": Shipaddress.city,
@@ -210,11 +226,11 @@ class ERPNextClient:
         return customer_name
     
     
-    def upsert_customer(self, email: str, full_name: str, Shipaddress: ShipAddress) -> str:
-        existing = self.find_customer_by_email(email)
+    def upsert_customer(self, email: str, user_id: str, Shipaddress: ShipAddress) -> str:
+        existing = self.find_customer_by_id(user_id)
         if existing:
             return existing
-        return self.create_customer(email, full_name, Shipaddress)
+        return self.create_customer(email, user_id, Shipaddress)
 
     def find_item_by_code(self, item_code: str) -> bool:
         params = {
@@ -358,6 +374,8 @@ def process_checkout_session(
     full_name: Optional[str] = None,
     currency: str = "USD",
     cache_ttl_seconds: int = 600,
+    user_id: int,
+    customer_email: str, #No longer needed
 ) -> Dict[str, Any]:
     """Idempotently mirror a completed Stripe Checkout Session into ERPNext.
 
@@ -368,7 +386,7 @@ def process_checkout_session(
     4) Create Sales Order (po_no set to stripe session id)
     """
     session_id = session.get("id")
-    email = (session.get("customer_details") or {}).get("email")
+    email = session.get("customer_email", '')
     if not session_id or not email:
         raise ERPError("Stripe session missing id or customer email")
 
@@ -384,8 +402,9 @@ def process_checkout_session(
             # 1) Customer
             customer_name = client.upsert_customer(
                 email=email,
-                full_name=full_name or email.split("@")[0],
+                #full_name=full_name or email.split("@")[0],
                 Shipaddress=shipping,
+                user_id=user_id,
             )
             print("Customer upserted:", customer_name)
 
@@ -430,7 +449,12 @@ def get_orders_for_user(user) -> list[dict]:
     # Create an instance of ERPNextClient
     client = ERPNextClient()
 
-    customer_name = client.find_customer_by_email(user.email)
+    if user:
+        formatted_user_id = f"WEB-CUSTOMER-{70000+int(user.id)}" #:05d
+    else:
+        print("no user provided")
+        raise ERPError(f"No user provided")
+    customer_name = client.find_customer_by_id(formatted_user_id)
     #customer_name = "cameron dietz"
     
     if not customer_name:

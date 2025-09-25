@@ -5,7 +5,7 @@ import {
   PhoneIcon,
 } from '@heroicons/react/24/outline';
 
-import { SiFacebook, SiX, SiInstagram, SiYoutube } from 'react-icons/si';
+import { SiFacebook, SiX, SiInstagram, SiYoutube, SiLinkedin } from 'react-icons/si';
 
 
 const Footer = () => {
@@ -58,10 +58,13 @@ const Footer = () => {
             <a href="https://youtube.com" target="_blank" rel="noopener noreferrer" aria-label="YouTube">
               <SiYoutube className="h-5 w-5 hover:text-red-600 transition-colors" />
             </a>*/}
-          <div className="flex space-x-4 mt-4">
+          <div className="flex space-x-4 mt-5">
 
             <a href="https://instagram.com/aventrek_" target="_blank" rel="noopener noreferrer" aria-label="Instagram">
-              <SiInstagram className="h-5 w-5 hover:text-pink-500 transition-colors" />
+              <SiInstagram className="h-6 w-6 hover:text-pink-500 transition-colors" />
+            </a>
+            <a href="https://www.linkedin.com/company/aventrek" target="_blank" rel="noopener noreferrer" aria-label="Twitter">
+              <SiLinkedin className="h-6 w-6 hover:text-blue-400 transition-colors" />
             </a>
 
           </div>
@@ -69,7 +72,7 @@ const Footer = () => {
 
         {/* Legal */}
         <div>
-          <h3 className="text-md font-semibold mb-2">Legal</h3>
+          <h3 className="text-md font-semibold mb-2">Resources</h3>
           <ul className="space-y-1 text-sm">
             <li><Link href="/Legal/terms-of-access">Terms of Access</Link></li>
             <li><Link href="/Legal/terms-of-sale">Terms of Sale</Link></li>

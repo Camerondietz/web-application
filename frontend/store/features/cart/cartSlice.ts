@@ -41,9 +41,16 @@ const cartSlice = createSlice({
     },
     clearCart: (state) => {
       state.items = [];
-    }
+    },
+    updateCartFromAPI(state, action: PayloadAction<CartItem[]>) {
+      state.items = action.payload.map(item => ({
+        ...item,
+        price: parseFloat(item.price as any), // Convert string price to number
+        image: state.items.find(i => i.id === item.id)?.image || '', // Preserve image if available
+      }));
+    },
   },
 });
 
-export const { addToCart, removeFromCart, updateQuantity, clearCart } = cartSlice.actions;
+export const { addToCart, removeFromCart, updateQuantity, clearCart, updateCartFromAPI } = cartSlice.actions;
 export default cartSlice.reducer;

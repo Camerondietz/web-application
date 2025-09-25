@@ -98,7 +98,7 @@ export default function Home() {
                   featured.categories.map((cat) => (
                     <Link key={cat.id} href={`/products?category=${cat.id}`} className="block">
                       <div className="bg-gray-50 dark:bg-gray-800 p-4 rounded-xl shadow-sm hover:shadow-md transition text-center">
-                        {cat.image && <img src={cat.image ? `${process.env.NEXT_PUBLIC_API_URL}${cat.image}` : "@/public/placeholder.jpg"} alt={cat.name} className="w-full h-40 object-cover rounded-md mb-4" />}
+                        {cat.image && <img src={cat.image ? `${process.env.NEXT_PUBLIC_API_URL}${cat.image}` : "@/public/placeholder.png"} alt={cat.name} className="w-full h-40 object-cover rounded-md mb-4" />}
                         <h3 className="text-lg font-semibold">{cat.name}</h3>
                       </div>
                     </Link>
@@ -117,7 +117,7 @@ export default function Home() {
                   featured.products.map((prod) => (
                     <Link key={prod.id} href={`/products/${prod.id}`} className="block">
                       <div className="bg-gray-50 dark:bg-gray-800 p-4 rounded-xl shadow-sm hover:shadow-md transition text-center">
-                        {prod.image && <img src={prod.image ? `${process.env.NEXT_PUBLIC_API_URL}${prod.image}` : "@/public/placeholder.jpg"} alt={prod.name} className="w-full h-40 object-cover rounded-md mb-4" />}
+                        {prod.image && <img src={prod.image ? `${process.env.NEXT_PUBLIC_API_URL}${prod.image}` : "@/public/placeholder.png"} alt={prod.name} className="w-full h-40 object-cover rounded-md mb-4" />}
                         <h3 className="text-lg font-semibold">{prod.name}</h3>
                       </div>
                     </Link>
@@ -141,7 +141,7 @@ export default function Home() {
                       className="flex flex-col items-center hover:opacity-80 transition"
                     >
                       {man.image ? (
-                        <img src={man.image ? `${process.env.NEXT_PUBLIC_API_URL}${man.image}` : "@/public/placeholder.jpg"} alt={man.name} className="w-20 h-20 object-contain mb-2" />
+                        <img src={man.image ? `${process.env.NEXT_PUBLIC_API_URL}${man.image}` : "@/public/placeholder.png"} alt={man.name} className="w-20 h-20 object-contain mb-2" />
                       ) : (
                         <span className="text-lg font-semibold">{man.name}</span>
                       )}

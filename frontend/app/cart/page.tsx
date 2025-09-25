@@ -9,6 +9,7 @@ import Link from "next/link";
 export default function CartPage() {
   const dispatch = useDispatch();
   const cart = useSelector((state: RootState) => state.cart.items);
+  const loggedIn = useSelector((state: RootState) => state.auth.isAuthenticated);
 
   // Calculate total price
   const total = cart.reduce((acc, item) => acc + item.price * item.quantity, 0);
@@ -36,7 +37,7 @@ export default function CartPage() {
                 {cart.map((item) => (
                   <tr key={item.id} className="border-b">
                     <td className="p-3 flex items-center">
-                      <img src={item.image ? `${process.env.NEXT_PUBLIC_API_URL}${item.image}` : "@/public/placeholder.jpg"} alt={item.name} className="w-16 h-16 object-cover rounded mr-4" />
+                      <img src={item.image ? `${process.env.NEXT_PUBLIC_API_URL}${item.image}` : "/placeholder.png"} alt={item.name} className="w-16 h-16 object-cover rounded mr-4" />
                       <Link href={`/products/${item.id}`} className="dark:text-blue-200 text-blue-600 hover:underline">{item.name}</Link>
                     </td>
                     <td className="p-3 text-center">
@@ -74,9 +75,15 @@ export default function CartPage() {
           <p className="text-xl font-bold">
             Total: ${total.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
           </p>
+          {loggedIn ? (
             <Link href={`/checkout`} className="px-6 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700">
               Checkout
             </Link>
+          ) : (
+            <Link href={`/login`} className="px-6 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700">
+              Checkout
+            </Link>
+          )}
           </div>
         </div>
       )}

@@ -28,6 +28,7 @@ urlpatterns = [
     path('homepage-featured/', views.homepage_featured, name='homepage_featured'),
     path('PricesView/', views.SellPricesView), #/vendorapi/prices/?product_ids=1,2,3
     path('quote-requests/', views.QuoteRequestView, name='quote-request'),
+    path('contact-us/', views.ContactUsView, name='contact-us'),
 
     ### AUTH ###
     # Path for registration

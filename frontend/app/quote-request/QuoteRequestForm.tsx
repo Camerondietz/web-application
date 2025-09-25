@@ -62,7 +62,7 @@ export default function QuoteRequestForm() {
     };
 
     try {
-      const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/quote-requests`, {
+      const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/quote-requests/`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(payload),

@@ -30,6 +30,7 @@ export default function FrequencyCalculator() {
 
   return (
     <div>
+      <h2 className="text-xl font-bold mb-4">Frequency Calculator</h2>
       <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-4">
         <input
           type="number"

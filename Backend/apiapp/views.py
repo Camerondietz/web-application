@@ -3,7 +3,7 @@ import logging
 from django.http import HttpResponse,JsonResponse
 from django.shortcuts import render, get_object_or_404
 from django.core.paginator import Paginator
-from .models import Category, Product, Manufacturer, Order, OrderItem, Address, QuoteRequest, HomepageConfig
+from .models import Category, Product, ProductPrice, Manufacturer, Order, OrderItem, Address, QuoteRequest, ContactUs, HomepageConfig
 from .serializers import CategorySerializer, ProductSerializer, AddressSerializer
 from .functions import get_sell_price
 from rest_framework.decorators import api_view, permission_classes
@@ -23,10 +23,12 @@ import stripe
 import json
 from django.contrib.auth.tokens import default_token_generator
 from django.utils.http import urlsafe_base64_encode, urlsafe_base64_decode
+from django.utils import timezone
 from django.utils.encoding import force_bytes
 from django.core.mail import send_mail
 from django.template.loader import render_to_string
 from vendorapi.functions import get_prices_for_parts
+from .services.ups_service import get_shipping_rates, get_single_shipping_cost
 
 logger = logging.getLogger(__name__)
 
@@ -318,7 +320,61 @@ def QuoteRequestView(request):
             {'status': 'error', 'message': 'Failed to process quote request'},
             status=status.HTTP_500_INTERNAL_SERVER_ERROR
         )
+    
+@api_view(['POST'])
+def ContactUsView(request):
+    try:
+        data = request.data
+        name = data.get('name')
+        email = data.get('email')
+        description = data.get('description')
 
+        # Validation
+        if not name and email and description:
+            logger.error("Missing required fields: name, email, or description")
+            return Response(
+                {'status': 'error', 'message': 'Name, email, and description are required'},
+                status=status.HTTP_400_BAD_REQUEST
+            )
+
+        # Save to DB
+        contact = ContactUs.objects.create(
+            name=name,
+            email=email,
+            description=description
+        )
+
+        # Send email notification to admin
+        try:
+            send_mail(
+                subject=f"New Contact Us Message #{contact.id}",
+                message=(
+                    f"New contact form submission:\n\n"
+                    f"Name: {name}\n"
+                    f"Email: {email}\n"
+                    f"Message:\n{description}\n\n"
+                    f"Submitted at: {contact.created_at}"
+                ),
+                from_email=settings.DEFAULT_FROM_EMAIL,
+                recipient_list=[settings.ADMIN_EMAIL],  # configure in settings.py
+                fail_silently=False,
+            )
+            logger.info(f"Contact form #{contact.id} created and email sent")
+        except Exception as e:
+            logger.error(f"Failed to send email for contact form #{contact.id}: {str(e)}")
+
+        return Response(
+            {'status': 'success', 'message': 'Your message has been submitted successfully', 'id': contact.id},
+            status=status.HTTP_201_CREATED
+        )
+
+    except Exception as e:
+        logger.error(f"Unexpected error in ContactUsView: {str(e)}")
+        return Response(
+            {'status': 'error', 'message': 'Failed to process contact form submission'},
+            status=status.HTTP_500_INTERNAL_SERVER_ERROR
+        )
+    
 #------------------------------
 #         AUTH
 #------------------------------
@@ -658,7 +714,13 @@ def get_order_details_view(request, order_name):
         
         if not order:
             return Response({"error": "Order not found"}, status=404)
-        
+        if request.user:
+            formatted_user_id = f"WEB-CUSTOMER-{70000+int(request.user.id)}" #:05d
+            if order.get("customer") !=  formatted_user_id:
+                return Response({"error": "Unauthorized access to this order"}, status=403)
+        else:
+            return Response({"error": "Unauthorized access to this order, no user"}, status=403)
+
                 # Extracting general order information
         order_data = {
             "order_name": order.get("name"),
@@ -733,35 +795,60 @@ def create_checkout_session(request):
 
         # Check if cart_items is None or empty
         if not cart_items:
-            return Response({
-                "error": "Cart is empty or not provided."
-            }, status=400)
+            logger.warning(f"User {user.id} attempted checkout with empty cart")
+            return Response({"error": "Cart is empty or not provided."}, status=status.HTTP_400_BAD_REQUEST)
         
         validated_items = []
         line_items = []
         total_price = Decimal('0.00')
-
+        total_item_price = Decimal('0.00')
         for item in cart_items:
-            print(item['id'])
-            product = get_object_or_404(Product, pk=item['id'])
-            print(product)
+            try:
+                product_id = int(item['id'])
+                quantity = int(item['quantity'])
+                cart_price = Decimal(item.get('price', '0.00'))  # Price stored in cart
+            except (ValueError, TypeError):
+                logger.error(f"Invalid cart item data: {item}")
+                return Response({"error": f"Invalid data for item ID {item.get('id', 'unknown')}."}, status=status.HTTP_400_BAD_REQUEST)
 
-            quantity = int(item['quantity'])
-            if quantity <= 0 or product.price <= 0:
-                return Response({
-                    "error": f"Invalid item: {product.name} (Qty: {quantity}, Price: {product.price})"
-                }, status=400)
+            product = get_object_or_404(Product, pk=product_id)
 
-            line_total = product.price * quantity
-            print("part price:", line_total)
-            total_price += line_total
-            print("total price:", total_price)
+            # Get live price with user-specific discount
+            price_result = get_sell_price(product_id, user.id)
+            if price_result['status'] != 'success' or price_result['sell_price'] is None:
+                logger.warning(f"No valid price for product {product_id} (user: {user.id})")
+                return Response({"error": f"Price unavailable for {product.name}. Please request a quote."}, status=status.HTTP_400_BAD_REQUEST)
+
+            live_price = Decimal(str(price_result['sell_price']))
+            if live_price <= 0:
+                logger.warning(f"Invalid price {live_price} for product {product_id}")
+                return Response({"error": f"Invalid price for {product.name}."}, status=status.HTTP_400_BAD_REQUEST)
+
+            # Check if price is still valid
+            try:
+                product_price = ProductPrice.objects.get(product=product)
+                if product_price.valid_until and product_price.valid_until < timezone.now():
+                    logger.warning(f"Expired price for product {product_id}")
+                    return Response({"error": f"Price for {product.name} has expired."}, status=status.HTTP_400_BAD_REQUEST)
+            except ProductPrice.DoesNotExist:
+                logger.warning(f"No ProductPrice record for product {product_id}")
+                return Response({"error": f"Price unavailable for {product.name}. Please request a quote."}, status=status.HTTP_400_BAD_REQUEST)
+
+            # Use the lower price: cart price (if valid) or user-specific live price
+            final_price = min(cart_price, live_price) if cart_price > 0 else live_price
+
+            if quantity <= 0:
+                logger.warning(f"Invalid quantity {quantity} for product {product_id}")
+                return Response({"error": f"Invalid quantity for {product.name}."}, status=status.HTTP_400_BAD_REQUEST)
+
+            line_total = final_price * quantity
+            total_item_price += line_total
 
             validated_items.append({
                 "id": product.id,
                 "name": product.name,
                 "quantity": quantity,
-                "price": str(product.price),
+                "price": str(final_price),
             })
 
             #Adding to order will go here
@@ -772,11 +859,32 @@ def create_checkout_session(request):
                     "product_data": {
                         "name": product.name,
                     },
-                    "unit_amount": int(product.price * 100),  # Stripe expects cents
+                    "unit_amount": int(final_price * 100),  # Stripe expects cents
                 },
                 "quantity": quantity,
             })
 
+        # Calculate shipping cost (no ZIP code provided at this stage)
+        shipping_cost = get_single_shipping_cost(cart_items)
+        if shipping_cost is None:
+            logger.error(f"Failed to calculate shipping cost for user {user.id}")
+            return Response({"error": "Unable to calculate shipping cost."}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+
+        # Add shipping as a line item
+        if shipping_cost > 0:
+            line_items.append({
+                "price_data": {
+                    "currency": "usd",
+                    "product_data": {
+                        "name": "Shipping",
+                    },
+                    "unit_amount": int(shipping_cost * 100),  # Stripe expects cents
+                },
+                "quantity": 1,
+            })
+
+        total_price = total_item_price + shipping_cost
+        logger.info(f"Creating checkout session for user {user.id} with items ${total_item_price} + shipping ${shipping_cost} = ${total_price}")
         print("line_items:", line_items)
         print("customer_email:", request.user.email)
         print("user_id:", request.user.id)
@@ -791,6 +899,7 @@ def create_checkout_session(request):
             },
             metadata={
                 "user_id": str(user.id),
+                "shipping_cost": str(shipping_cost),
             },
             customer_email=user.email,
             automatic_tax={'enabled': True},
@@ -798,11 +907,12 @@ def create_checkout_session(request):
         )
     except Exception as e:
         return Response({"error": str(e)}, status=500)
-
+    print(str(shipping_cost))
     return Response({
-        "clientSecret":session.client_secret,
-        'cart':validated_items
-        })
+        "clientSecret": session.client_secret,
+        "cart": validated_items,
+        "shipping_cost": str(shipping_cost),
+    }, status=status.HTTP_200_OK)
 
 @api_view(['GET'])
 def session_status(request):
@@ -839,7 +949,9 @@ def stripe_webhook(request):
             total_order_price = Decimal(session['amount_total']) / 100
             user_id = metadata.get("user_id")
             user = User.objects.get(id=user_id) if user_id else None
-            customer_email = session.get("customer_details", {}).get("email")
+            confirmation_email = session.get("customer_details", {}).get("email") #Billing email
+            customer_email = session.get("customer_email", '') #Email on account
+            ship_amount = session.get("metadata", {}).get("user_id") #ID of account
             session_status = session.get("status")
             stripe_line_items = stripe.checkout.Session.list_line_items(session_id)
 
@@ -853,10 +965,12 @@ def stripe_webhook(request):
             collected = session.get('collected_information') or {}
             shipping_details = collected.get('shipping_details') or {}
             shipping = shipping_details.get('address') or {}
+            shipping_title = shipping_details.get('name') or {}
             if not shipping:
                 shipping = session.get("customer_details", {}).get("address", {}) or {}
 
             ship_addr = ShipAddress(
+                name = shipping_details.get('name', ''),
                 line1=shipping.get('line1', ''),
                 line2=shipping.get('line2', ''),
                 city=shipping.get('city', ''),
@@ -864,6 +978,7 @@ def stripe_webhook(request):
                 postal_code=shipping.get('postal_code', ''),
                 country=shipping.get('country', ''),
             )
+            order_shipping_title = shipping_details.get('name', '')
             order_shipping_street = shipping.get('line1', '')
             order_shipping_street2 = shipping.get('line2', '')
             order_shipping_city = shipping.get('city', '')
@@ -872,13 +987,18 @@ def stripe_webhook(request):
             order_shipping_country = shipping.get('country', '')
 
             # Step 1: ERP Sync
+            if user:
+                formatted_user_id = f"WEB-CUSTOMER-{70000+int(user.id)}" #:05d
+                # => WEB-CUSTOMER-00023
             try:
                 result = process_checkout_session(
                     session=session,
                     cart_items=stripe_line_items,
                     shipping=ship_addr,
-                    full_name=session.get('customer_details', {}).get('name'),
+                    full_name=session.get('customer_details', {}).get('name'), #Temp only
                     currency=(session.get('currency') or 'usd').upper(),
+                    user_id=formatted_user_id,
+                    customer_email=customer_email, #no longer necessary
                 )
                 print('ERPNext sync result:', result)
             except Exception as e:
@@ -902,6 +1022,7 @@ def stripe_webhook(request):
                         status=order_status,
                         stripe_session_id=session_id,
                         total_price=total_order_price,
+                        shipping_title=order_shipping_title,
                         shipping_street=order_shipping_street,
                         shipping_street2=order_shipping_street2,
                         shipping_city=order_shipping_city,
@@ -965,7 +1086,6 @@ def send_order_confirmation(order, user):
     )
 
 ### UPS ###
-from .services.ups_service import get_shipping_rates
 @api_view(['GET'])
 def UPS_rates(request):
     #destination_zip = request.GET.get("zip")

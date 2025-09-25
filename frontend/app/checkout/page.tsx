@@ -11,6 +11,7 @@ import { RootState } from "@/store/store";
 import { useSelector, useDispatch } from "react-redux";
 import Cookies from "js-cookie";
 import { useRouter } from "next/navigation";
+import { updateCartFromAPI } from '@/store/features/cart/cartSlice';
 
 //WHEN READY
 /*
@@ -20,7 +21,15 @@ if (!token) throw new Error("Unable to authenticate. Please log in again.");
 */
 const stripePromise = loadStripe(process.env.NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY!);
 
+interface CartItem {
+  id: number;
+  name: string;
+  quantity: number;
+  price: string; // API returns price as string
+}
+
 export default function Checkout() {
+  const dispatch = useDispatch();
   const cartItems = useSelector((state: RootState) => state.cart.items); //for cart
   // Extract only id and quantity
   const simplifiedCart = cartItems.map(item => ({
@@ -29,11 +38,9 @@ export default function Checkout() {
   }));
   const router = useRouter();
   const [clientSecret, setClientSecret] = useState<string | null>(null);
-  const [shipping_amount, setshipping_amount] = useState<number | null>(null);
-
-  useEffect(() => {
-    setshipping_amount(0);
-  }, []);
+  const [shippingCost, setShippingCost] = useState<number | null>(null);
+  const [apiCart, setApiCart] = useState<CartItem[] | null>(null);
+  const [error, setError] = useState<string | null>(null);
  
   const fetchClientSecret = useCallback(async () => {
     try {
@@ -52,6 +59,11 @@ export default function Checkout() {
       const data = await response.json();
       if (response.ok) {
         setClientSecret(data.clientSecret);
+        setShippingCost(data.shipping_cost ? parseFloat(data.shipping_cost) : null);
+        setApiCart(data.cart || []);
+        // Update Redux cart with API data
+        dispatch(updateCartFromAPI(data.cart || []));
+        setError(null);
         return data.clientSecret;
       } else {
         throw new Error(data.error || 'Failed to create checkout session');
@@ -66,7 +78,7 @@ export default function Checkout() {
         }
       throw error;
     }
-  }, [router]);
+  }, [router, simplifiedCart, dispatch]);
 
   //const appearance: Appearance = {theme: 'stripe',labels: 'floating',variables: {  colorPrimary: '#0570de',  colorBackground: '#f6f9fc',}};
   
@@ -83,11 +95,16 @@ return (
         {/* Cart Summary */}
         <div className="bg-gray-100 dark:bg-gray-800 shadow-md rounded-lg p-6">
           <h2 className="text-xl font-semibold mb-4">Your Cart</h2>
-          {cartItems.length === 0 ? (
+          {error && (
+            <div className="mb-4 p-3 bg-red-100 dark:bg-red-900 text-red-700 dark:text-red-200 rounded">
+              {error}
+            </div>
+          )}
+          {!apiCart || apiCart.length === 0 ? (
             <p className="text-gray-500">Your cart is empty.</p>
           ) : (
             <ul className="space-y-4">
-              {cartItems.map((item) => (
+              {apiCart.map((item) => (
                 <li key={item.id} className="border-b pb-2">
                   <div className="flex justify-between items-center">
                     <div>
@@ -96,7 +113,7 @@ return (
                     </div>
                     <div className="text-right">
                       <p className="text-sm font-semibold">
-                        ${((item.price) * item.quantity).toFixed(2)}
+                        ${(parseFloat(item.price) * item.quantity).toFixed(2)}
                       </p>
                     </div>
                   </div>
@@ -104,14 +121,20 @@ return (
               ))}
               <li className="pt-4 flex justify-between font-semibold">
                 <span>Subtotal</span>
-                <span>
-                  ${cartItems.reduce((total, item) => total + (item.price) * item.quantity, 0).toFixed(2)}
-                </span>
+                <span>${apiCart.reduce((total, item) => total + parseFloat(item.price) * item.quantity, 0).toFixed(2)}</span>
               </li>
-              <li className="pt-4 flex justify-between font-semibold">
+              <li className="pt-2 flex justify-between font-semibold" aria-label="Shipping cost">
                 <span>Shipping</span>
                 <span>
-                  ${shipping_amount ?? ''}
+                  {shippingCost !== null ? `$${shippingCost.toFixed(2)}` : 'Calculating...'}
+                </span>
+              </li>
+              <li className="pt-2 flex justify-between font-semibold" aria-label="Total cost">
+                <span>Total before tax</span>
+                <span>
+                  {shippingCost !== null
+                    ? `$${(apiCart.reduce((total, item) => total + parseFloat(item.price) * item.quantity, 0) + shippingCost).toFixed(2)}`
+                    : 'Calculating...'}
                 </span>
               </li>
             </ul>
