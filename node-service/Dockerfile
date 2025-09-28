@@ -1,6 +1,6 @@
-FROM node:23.11.0-bullseye-slim	
+FROM node:22-alpine	
 
-RUN npm install -g npm@9.1.3
+RUN npm install -g npm@10.9.3
 
 ADD package.json .
 ADD server.js .

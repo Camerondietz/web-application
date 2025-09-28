@@ -11,6 +11,8 @@ config.yml
 #in progress
 sentiment-microservice
 
+# env files (can opt-in for committing if needed)
+.env*
 
 #Reference
 frontend-old

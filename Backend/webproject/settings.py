@@ -219,7 +219,7 @@ DIGIKEY_AUTH_URL = 'https://api.digikey.com/v1/oauth2/token'
 DIGIKEY_PRODUCT_URL = 'https://api.digikey.com/products/v4/search/{digikey_part_number}/productdetails'
 
 #ERP
-ERPNEXT_BASE_URL = "http://localhost:8080"
+ERPNEXT_BASE_URL = os.environ.get("ERPNEXT_BASE_URL")
 ERPNEXT_API_KEY = os.environ.get("ERPNEXT_API_KEY")
 ERPNEXT_API_SECRET = os.environ.get("ERPNEXT_API_SECRET")
 
